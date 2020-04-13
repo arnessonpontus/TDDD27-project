@@ -4,7 +4,6 @@ const Navbar = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   const toggleNav = () => {
-    console.log(isNavOpen);
     setIsNavOpen(!isNavOpen);
   };
 
