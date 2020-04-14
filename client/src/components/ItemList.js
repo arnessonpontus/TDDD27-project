@@ -18,10 +18,10 @@ const ItemList = (props) => {
     <div>
       <Adder />
       <div>
-        {items.map(({ id, name }) => (
-          <div key={id}>
+        {items.map(({ _id, name }) => (
+          <div key={_id}>
             <p>{name}</p>
-            <button className="is-small" onClick={() => onDeleteClick(id)}>
+            <button className="is-small" onClick={() => onDeleteClick(_id)}>
               delete
             </button>
           </div>
