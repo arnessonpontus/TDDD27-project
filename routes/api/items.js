@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const auth = require("../../middleware/auth");
 
 // Item model
 const Item = require("../../models/Item");
@@ -15,8 +16,8 @@ router.get("/", (req, res) => {
 
 // @route  POST api/items
 // @desc   post an Items
-// @access Public // Change to private after login
-router.post("/", (req, res) => {
+// @access Private // Change to private after login
+router.post("/", auth, (req, res) => {
   const newItem = new Item({
     name: req.body.name,
   });
@@ -26,8 +27,8 @@ router.post("/", (req, res) => {
 
 // @route  DELETE api/items:id
 // @desc   delete an Item
-// @access Public // Change to private after login
-router.delete("/:id", (req, res) => {
+// @access Private // Change to private after login
+router.delete("/:id", auth, (req, res) => {
   Item.findById(req.params.id)
     .then((item) => item.remove().then(() => res.json({ success: true })))
     .catch((err) => res.status(404).json({ success: false })); // Sends 404 if item does not exist

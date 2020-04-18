@@ -1,9 +1,12 @@
+// "Register"
+
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const config = require("config");
 const jwt = require("jsonwebtoken");
-// Item model
+
+// User model
 const User = require("../../models/User");
 
 // @route  POST api/users
