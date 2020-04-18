@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { connect } from "react-redux";
 import RegisterModal from "./auth/RegisterModal";
+import LoginModal from "./auth/LoginModal";
 import { clearErrors } from "../actions/errorActions";
 import { logout } from "../actions/authActions";
 import propTypes from "prop-types";
@@ -8,6 +9,7 @@ import propTypes from "prop-types";
 const Navbar = (props) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isRegModalOpen, setIsRegModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
@@ -18,10 +20,34 @@ const Navbar = (props) => {
     setIsRegModalOpen(!isRegModalOpen);
   };
 
+  const toggleLoginModal = () => {
+    props.clearErrors();
+    setIsLoginModalOpen(!isLoginModalOpen);
+  };
+
+  const { isAuthenticated, user } = props.auth;
+
+  const authLinks = (
+    <a href="#/" className="button is-light" onClick={props.logout}>
+      Logout
+    </a>
+  );
+
+  const guestLinks = (
+    <Fragment>
+      <a href="#/" className="button is-primary" onClick={toggleRegModal}>
+        <strong>Register</strong>
+      </a>
+      <a href="#/" className="button is-light" onClick={toggleLoginModal}>
+        <strong>Login</strong>
+      </a>
+    </Fragment>
+  );
+
   return (
     <nav className="navbar" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <a className="navbar-item" href="#">
+        <a className="navbar-item" href="/">
           <img src="./images/first-draft-logo.png" alt="No-img" />
         </a>
         <a
@@ -53,17 +79,11 @@ const Navbar = (props) => {
         </div>
         <div className="navbar-end">
           <div className="navbar-item">
+            <strong className="navbar-item">
+              {user ? `Welcome ${user.name}` : ""}
+            </strong>
             <div className="buttons">
-              <a
-                href="#"
-                className="button is-primary"
-                onClick={toggleRegModal}
-              >
-                <strong>Sign up</strong>
-              </a>
-              <a href="#" className="button is-light" onClick={props.logout}>
-                Logout
-              </a>
+              {isAuthenticated ? authLinks : guestLinks}
             </div>
           </div>
         </div>
@@ -72,15 +92,22 @@ const Navbar = (props) => {
         isRegModalOpen={isRegModalOpen}
         toggleRegModal={toggleRegModal}
       />
+      <LoginModal
+        isLoginModalOpen={isLoginModalOpen}
+        toggleLoginModal={toggleLoginModal}
+      />
     </nav>
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
 
 Navbar.propTypes = {
   clearErrors: propTypes.func.isRequired,
   logout: propTypes.func.isRequired,
+  auth: propTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, { clearErrors, logout })(Navbar);
