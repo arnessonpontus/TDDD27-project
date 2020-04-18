@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
+import LandingPage from "./components/LandingPage";
 import Navbar from "./components/Navbar";
-import ItemList from "./components/ItemList";
 import "./App.css";
 
 import { Provider } from "react-redux";
@@ -17,8 +17,7 @@ function App() {
       <div className="App">
         <Navbar />
         <div className="container has-text-centered	">
-          <h1 className="title is-1">Hello TDDD27</h1>
-          <ItemList />
+          <LandingPage />
         </div>
       </div>
     </Provider>
