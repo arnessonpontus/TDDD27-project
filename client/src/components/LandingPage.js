@@ -1,11 +1,11 @@
 import React from "react";
-import ItemList from "./ItemList";
+import WordList from "./WordList";
 
 const LandingPage = (props) => {
   return (
     <div>
       <h1 className="title is-1">Welcome to Doodla</h1>
-      <ItemList />
+      <WordList />
     </div>
   );
 };

@@ -1,24 +1,24 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { getItems, deleteItem } from "../actions/itemActions";
+import { getWords, deleteWord } from "../actions/wordActions";
 import Adder from "./Adder";
 import PropTypes from "prop-types";
 
-const ItemList = (props) => {
+const WordList = (props) => {
   useEffect(() => {
-    props.getItems();
+    props.getWords();
   }, []);
 
   const onDeleteClick = (id) => {
-    props.deleteItem(id);
+    props.deleteWord(id);
   };
 
-  const { items } = props.item;
+  const { words } = props.word;
   return (
     <div>
       <Adder />
       <div>
-        {items.map(({ _id, name }) => (
+        {words.map(({ _id, name }) => (
           <div key={_id}>
             <p>{name}</p>
             <button className="is-small" onClick={() => onDeleteClick(_id)}>
@@ -32,13 +32,13 @@ const ItemList = (props) => {
 };
 
 // To Check the intended types of properties passed to components
-ItemList.propTypes = {
-  getItems: PropTypes.func.isRequired,
-  item: PropTypes.object.isRequired,
+WordList.propTypes = {
+  getWords: PropTypes.func.isRequired,
+  word: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  item: state.item,
+  word: state.word,
 });
 
-export default connect(mapStateToProps, { getItems, deleteItem })(ItemList);
+export default connect(mapStateToProps, { getWords, deleteWord })(WordList);

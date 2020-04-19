@@ -1,15 +1,15 @@
 import axios from "axios";
-import { GET_ITEMS, ADD_ITEM, DELETE_ITEM, ITEMS_LOADING } from "./types";
+import { GET_WORDS, ADD_WORD, DELETE_WORD, WORDS_LOADING } from "./types";
 import { tokenConfig } from "./authActions";
 import { returnErrors } from "./errorActions";
 
-export const getItems = () => (dispatch) => {
-  dispatch(setItemsLoading());
+export const getWords = () => (dispatch) => {
+  dispatch(setWordsLoading());
   axios
-    .get("/api/items")
+    .get("/api/words")
     .then((res) =>
       dispatch({
-        type: GET_ITEMS,
+        type: GET_WORDS,
         payload: res.data,
       })
     )
@@ -18,13 +18,13 @@ export const getItems = () => (dispatch) => {
     );
 };
 
-export const addItem = (item) => (dispatch, getState) => {
-  dispatch(setItemsLoading());
+export const addWord = (word) => (dispatch, getState) => {
+  dispatch(setWordsLoading());
   axios
-    .post("/api/items", item, tokenConfig(getState))
+    .post("/api/words", word, tokenConfig(getState))
     .then((res) =>
       dispatch({
-        type: ADD_ITEM,
+        type: ADD_WORD,
         payload: res.data,
       })
     )
@@ -33,13 +33,13 @@ export const addItem = (item) => (dispatch, getState) => {
     );
 };
 
-export const deleteItem = (id) => (dispatch, getState) => {
-  dispatch(setItemsLoading());
+export const deleteWord = (id) => (dispatch, getState) => {
+  dispatch(setWordsLoading());
   axios
-    .delete(`api/items/${id}`, tokenConfig(getState))
+    .delete(`api/words/${id}`, tokenConfig(getState))
     .then((res) =>
       dispatch({
-        type: DELETE_ITEM,
+        type: DELETE_WORD,
         payload: id,
       })
     )
@@ -48,8 +48,8 @@ export const deleteItem = (id) => (dispatch, getState) => {
     );
 };
 
-export const setItemsLoading = () => {
+export const setWordsLoading = () => {
   return {
-    type: ITEMS_LOADING,
+    type: WORDS_LOADING,
   };
 };

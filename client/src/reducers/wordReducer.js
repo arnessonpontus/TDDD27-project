@@ -1,35 +1,35 @@
 import {
-  GET_ITEMS,
-  ADD_ITEM,
-  DELETE_ITEM,
-  ITEMS_LOADING,
+  GET_WORDS,
+  ADD_WORD,
+  DELETE_WORD,
+  WORDS_LOADING,
 } from "../actions/types";
 
 const initialState = {
-  items: [],
+  words: [],
   loading: false,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_ITEMS:
+    case GET_WORDS:
       return {
         ...state,
-        items: action.payload,
+        words: action.payload,
         loading: false,
       };
-    case DELETE_ITEM:
+    case DELETE_WORD:
       return {
         ...state,
-        items: state.items.filter((item) => item._id !== action.payload),
+        words: state.words.filter((word) => word._id !== action.payload),
       };
-    case ADD_ITEM:
+    case ADD_WORD:
       return {
         ...state,
-        items: [action.payload, ...state.items], // ... Because we can not mutate state, have to copy it
+        words: [action.payload, ...state.words], // ... Because we can not mutate state, have to copy it
         loading: false,
       };
-    case ITEMS_LOADING:
+    case WORDS_LOADING:
       return {
         ...state,
         loading: true,

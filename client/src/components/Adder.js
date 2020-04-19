@@ -1,36 +1,38 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { addItem } from "../actions/itemActions";
+import { addWord } from "../actions/wordActions";
 
 const Adder = (props) => {
-  const [itemName, setItemName] = useState("");
+  const [wordName, setWordName] = useState("");
   const onSubmit = (e) => {
     e.preventDefault();
-    const newItem = { name: itemName };
+    const newWord = { name: wordName };
 
-    // Add item via add item action
-    props.addItem(newItem);
+    // Add word via add word action
+    props.addWord(newWord);
   };
 
   const onChange = (e) => {
-    setItemName(e.target.value);
+    setWordName(e.target.value);
   };
 
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Add"
-          onChange={onChange}
-        ></input>
-        <button className="button is-medium">Redux</button>
+        <div className="field">
+          <input
+            type="text"
+            name="name"
+            placeholder="Add"
+            onChange={onChange}
+          ></input>
+        </div>
+        <button className="button is-medium">Add word</button>
       </form>
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({ item: state.item });
+const mapStateToProps = (state) => ({ word: state.word });
 
-export default connect(mapStateToProps, { addItem })(Adder);
+export default connect(mapStateToProps, { addWord })(Adder);
