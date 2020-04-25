@@ -4,7 +4,7 @@ import RegisterModal from "./auth/RegisterModal";
 import LoginModal from "./auth/LoginModal";
 import { clearErrors } from "../actions/errorActions";
 import { logout } from "../actions/authActions";
-import propTypes from "prop-types";
+import PropTypes from "prop-types";
 
 const Navbar = (props) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -105,9 +105,9 @@ const mapStateToProps = (state) => ({
 });
 
 Navbar.propTypes = {
-  clearErrors: propTypes.func.isRequired,
-  logout: propTypes.func.isRequired,
-  auth: propTypes.object.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  logout: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, { clearErrors, logout })(Navbar);

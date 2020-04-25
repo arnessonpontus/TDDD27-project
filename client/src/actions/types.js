@@ -1,4 +1,5 @@
-export const GET_WORDS = "GET_WORDS";
+export const GET_ALL_WORDS = "GET_ALL_WORDS";
+export const GET_USER_WORDS = "GET_USER_WORDS";
 export const ADD_WORD = "ADD_WORD";
 export const DELETE_WORD = "DELETE_WORD";
 export const WORDS_LOADING = "WORDS_LOADING";

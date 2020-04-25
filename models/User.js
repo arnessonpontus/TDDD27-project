@@ -21,6 +21,7 @@ const UserSchema = new Schema({
     required: true,
     default: Date.now(),
   },
+  words: [String],
 });
 
 module.exports = User = mongoose.model("user", UserSchema);

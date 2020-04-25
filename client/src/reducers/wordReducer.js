@@ -1,32 +1,41 @@
 import {
-  GET_WORDS,
+  GET_ALL_WORDS,
+  GET_USER_WORDS,
   ADD_WORD,
   DELETE_WORD,
   WORDS_LOADING,
 } from "../actions/types";
 
 const initialState = {
-  words: [],
+  allWords: [],
+  userWords: [],
   loading: false,
 };
 
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_WORDS:
+    case GET_ALL_WORDS:
       return {
         ...state,
-        words: action.payload,
+        allWords: action.payload,
+        loading: false,
+      };
+    case GET_USER_WORDS:
+      return {
+        ...state,
+        userWords: action.payload,
         loading: false,
       };
     case DELETE_WORD:
       return {
         ...state,
-        words: state.words.filter((word) => word._id !== action.payload),
+        // Might want to add for userWords
+        allWords: state.words.filter((word) => word._id !== action.payload),
       };
     case ADD_WORD:
       return {
         ...state,
-        words: [action.payload, ...state.words], // ... Because we can not mutate state, have to copy it
+        allWords: [action.payload, ...state.allWords], // ... Because we can not mutate state, have to copy it
         loading: false,
       };
     case WORDS_LOADING:

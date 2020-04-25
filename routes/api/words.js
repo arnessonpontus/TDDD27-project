@@ -8,14 +8,22 @@ const Word = require("../../models/Word");
 // @route  GET api/words
 // @desc   Get all Words
 // @access Public
-router.get("/", (req, res) => {
+router.get("/all", (req, res) => {
   Word.find()
     .sort({ date: -1 }) // -1: decending
     .then((words) => res.json(words));
 });
 
+router.get("/user", (req, res) => {
+  Word.find({ _id: { $in: req.query.wordIds } })
+    .sort({ date: -1 }) // -1: decending
+    .then((words) => {
+      res.json(words);
+    });
+});
+
 // @route  POST api/words
-// @desc   post an Words
+// @desc   post a Word
 // @access Private // Change to private after login
 router.post("/", auth, (req, res) => {
   const newWord = new Word({
