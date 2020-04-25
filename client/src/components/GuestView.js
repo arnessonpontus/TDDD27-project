@@ -1,13 +1,14 @@
-import React from "react";
+import React, { Fragment } from "react";
+import StartGameBtns from "./StartGameBtns";
 
 const GuestView = () => {
   return (
-    <div className="section is-medium">
-      <div className="buttons are-large are-primary columns is-centered ">
-        <button className="button is-primary ">Join game</button>
-        <button className="button">Create Game</button>
+    <Fragment>
+      <h1 className="title is-1">Welcome to Doodla</h1>
+      <div className="section columns is-vcentered is-medium">
+        <StartGameBtns />
       </div>
-    </div>
+    </Fragment>
   );
 };
 

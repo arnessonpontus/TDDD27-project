@@ -18,32 +18,30 @@ const UserWordList = (props) => {
   const { userWords } = props.word;
 
   return (
-    <div>
-      <div className="tile is-primary">
-        <article className="tile is-child notification is-primary is-3">
-          <p className="title">Your added words</p>
-          {userWords.map(({ _id, name }) => (
-            <div key={_id} className="field is-grouped">
-              <div className="control">
-                <p className="subtitle">{name}</p>
-              </div>
-              <div
-                className="control"
-                onClick={() => {
-                  console.log("click");
-                  onDeleteClick(_id);
-                }}
-              >
-                <i
-                  style={{ cursor: "pointer" }}
-                  className="fas fa-trash is-medium"
-                ></i>
-              </div>
+    <div className="column">
+      <article className="tile is-child notification is-primary is-full">
+        <p className="title">Your added words</p>
+        {userWords.map(({ _id, name }) => (
+          <div key={_id} className="field is-grouped">
+            <div className="control">
+              <p className="subtitle">{name}</p>
             </div>
-          ))}
-          <Adder />
-        </article>
-      </div>
+            <div
+              className="control"
+              onClick={() => {
+                console.log("click");
+                onDeleteClick(_id);
+              }}
+            >
+              <i
+                style={{ cursor: "pointer" }}
+                className="fas fa-trash is-medium"
+              ></i>
+            </div>
+          </div>
+        ))}
+        <Adder />
+      </article>
     </div>
   );
 };

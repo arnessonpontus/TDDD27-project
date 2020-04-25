@@ -21,8 +21,8 @@ const Adder = (props) => {
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <div class="field has-addons">
-          <p class="control">
+        <div className="field has-addons">
+          <p className="control">
             <input
               className="input"
               type="text"
@@ -32,8 +32,8 @@ const Adder = (props) => {
               onChange={onChange}
             ></input>
           </p>
-          <p class="control">
-            <button class="button">Add word</button>
+          <p className="control">
+            <button className="button">Add word</button>
           </p>
         </div>
       </form>
