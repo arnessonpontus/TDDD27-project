@@ -14,15 +14,15 @@ const WordList = (props) => {
 
   const { allWords } = props.word;
   return (
-    <div>
-      <h1>ALL WORDS</h1>
-      <div style={{ backgroundColor: "lightgray" }}>
+    <div className="tile is-primary">
+      <article className="tile is-child notification is-primary is-4">
+        <p className="title">All words</p>
         {allWords.map(({ _id, name }) => (
           <div key={_id}>
-            <p>{name}</p>
+            <p className="subtitle">{name}</p>
           </div>
         ))}
-      </div>
+      </article>
     </div>
   );
 };

@@ -3,13 +3,15 @@ import { connect } from "react-redux";
 import { addWord } from "../actions/wordActions";
 
 const Adder = (props) => {
+  const { user } = props.auth;
   const [wordName, setWordName] = useState("");
   const onSubmit = (e) => {
     e.preventDefault();
-    const newWord = { name: wordName };
+    const newWord = { name: wordName, userID: user._id };
 
     // Add word via add word action
     props.addWord(newWord);
+    setWordName("");
   };
 
   const onChange = (e) => {
@@ -19,20 +21,26 @@ const Adder = (props) => {
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <div className="field">
-          <input
-            type="text"
-            name="name"
-            placeholder="Add"
-            onChange={onChange}
-          ></input>
+        <div class="field has-addons">
+          <p class="control">
+            <input
+              className="input"
+              type="text"
+              name="name"
+              value={wordName}
+              placeholder="Guitar"
+              onChange={onChange}
+            ></input>
+          </p>
+          <p class="control">
+            <button class="button">Add word</button>
+          </p>
         </div>
-        <button className="button is-medium">Add word</button>
       </form>
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({ word: state.word });
+const mapStateToProps = (state) => ({ word: state.word, auth: state.auth });
 
 export default connect(mapStateToProps, { addWord })(Adder);

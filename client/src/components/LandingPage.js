@@ -1,6 +1,7 @@
 import React from "react";
-import WordList from "./WordList";
 import UserWordList from "./UserWordList";
+import UserView from "./UserView";
+import GuestView from "./GuestView";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -9,10 +10,7 @@ const LandingPage = (props) => {
   return (
     <div>
       <h1 className="title is-1">Welcome to Doodla</h1>
-      <WordList />
-      <br></br>
-      <br></br>
-      {user ? <UserWordList /> : null}
+      {user ? <UserView /> : <GuestView />}
     </div>
   );
 };

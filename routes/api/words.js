@@ -15,7 +15,7 @@ router.get("/all", (req, res) => {
 });
 
 router.get("/user", (req, res) => {
-  Word.find({ _id: { $in: req.query.wordIds } })
+  Word.find({ userID: { $in: req.query.userID } })
     .sort({ date: -1 }) // -1: decending
     .then((words) => {
       res.json(words);
@@ -28,6 +28,7 @@ router.get("/user", (req, res) => {
 router.post("/", auth, (req, res) => {
   const newWord = new Word({
     name: req.body.name,
+    userID: req.body.userID,
   });
 
   newWord.save().then((word) => res.json(word));

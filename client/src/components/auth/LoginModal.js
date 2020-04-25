@@ -85,7 +85,7 @@ const LoginModal = (props) => {
 
             <div className="field">
               <label className="label">Password</label>
-              <p className="control has-icons-left">
+              <div className="control has-icons-left">
                 <input
                   name="password"
                   className="input"
@@ -97,7 +97,7 @@ const LoginModal = (props) => {
                 <span className="icon is-small is-left">
                   <i className="fas fa-lock"></i>
                 </span>
-              </p>
+              </div>
             </div>
 
             <div className="field">

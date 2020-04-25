@@ -11,6 +11,10 @@ const WordSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  userID: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = Word = mongoose.model("word", WordSchema);

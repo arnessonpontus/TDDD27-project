@@ -30,12 +30,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
         // Might want to add for userWords
-        allWords: state.words.filter((word) => word._id !== action.payload),
+        allWords: state.allWords.filter((word) => word._id !== action.payload),
+        userWords: state.userWords.filter(
+          (word) => word._id !== action.payload
+        ),
       };
     case ADD_WORD:
       return {
         ...state,
         allWords: [action.payload, ...state.allWords], // ... Because we can not mutate state, have to copy it
+        userWords: [action.payload, ...state.userWords],
         loading: false,
       };
     case WORDS_LOADING:

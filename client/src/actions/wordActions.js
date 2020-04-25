@@ -23,13 +23,12 @@ export const getAllWords = () => (dispatch) => {
       dispatch(returnErrors(err.response.data, err.response.status))
     );
 };
-export const getUserWords = (wordIds) => (dispatch) => {
-  console.log(wordIds);
+export const getUserWords = (userID) => (dispatch) => {
   dispatch(setWordsLoading());
   axios
     .get("/api/words/user", {
       params: {
-        wordIds: wordIds,
+        userID: userID,
       },
     })
     .then((res) => {
