@@ -23,6 +23,11 @@ io.on("connection", (socket) => {
     // Emits to everyone
     io.emit("message", "A user has left the chat");
   });
+
+  // Listen for chat message
+  socket.on("chatMessage", (msg) => {
+    io.emit("message", msg);
+  });
 });
 
 // DB config
