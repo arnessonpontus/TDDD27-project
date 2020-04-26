@@ -8,7 +8,9 @@ const StartGameBtns = () => {
         <Link className="button is-primary " to="/game">
           Join game
         </Link>
-        <a className="button">Create Game</a>
+        <a href="/" className="button">
+          Create Game
+        </a>
       </div>
     </Fragment>
   );
