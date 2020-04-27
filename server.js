@@ -13,15 +13,28 @@ app.use(express.json());
 
 // Run when client connects
 io.on("connection", (socket) => {
+  const now = new Date();
   // Welcomes single user
-  socket.emit("message", "Welcome to the DOODLA");
+  socket.emit("message", {
+    text: "Welcome to the DOODLA",
+    name: "Bot",
+    time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+  });
 
   // Emits to all except the user
-  socket.broadcast.emit("message", "A user has joined the chat");
+  socket.broadcast.emit("message", {
+    text: "A user has joined the chat",
+    name: "Bot",
+    time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+  });
 
   socket.on("disconnect", () => {
     // Emits to everyone
-    io.emit("message", "A user has left the chat");
+    io.emit("message", {
+      text: "A user has left the chat",
+      name: "Bot",
+      time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+    });
   });
 
   // Listen for chat message

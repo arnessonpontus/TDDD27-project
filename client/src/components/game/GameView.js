@@ -1,10 +1,11 @@
 import React from "react";
 import ChatWindow from "./ChatWindow";
+import PlayGround from "./DrawingArea";
 
 const GameView = () => {
   return (
-    <div className="section ">
-      <h1>Game</h1>
+    <div className="section columns ">
+      <PlayGround />
       <ChatWindow />
     </div>
   );

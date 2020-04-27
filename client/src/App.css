@@ -1,3 +1,11 @@
 body {
     font-family: 'Fredoka One', cursive;
   }
+
+  .game-height {
+    height: 300px;
+ }
+
+ .less-padding {
+   padding: 0.5rem;
+ }

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import LandingPage from "./components/LandingPage";
-import GameView from "./components/GameView";
+import GameView from "./components/game/GameView";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import {
@@ -24,7 +24,7 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
-          <div className="container has-text-centered	">
+          <div className="container">
             <Switch>
               <Route path="/" exact>
                 <LandingPage />
