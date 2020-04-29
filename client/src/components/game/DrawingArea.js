@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
 
-const PlayGround = () => {
+const socket = io("http://localhost:5000");
+
+const DrawingArea = () => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [ctx, setCtx] = useState(null);
 
@@ -9,25 +12,37 @@ const PlayGround = () => {
   useEffect(() => {
     const context = canvasRef.current.getContext("2d");
     setCtx(context);
+
+    socket.on("drawing", (drawing) => {
+      draw(drawing);
+    });
   }, [canvasRef]);
+
+  const draw = (drawing) => {
+    console.log(drawing);
+
+    //ctx.fillStyle = "#FF0000";
+    //const penWidth = 10;
+    //ctx.fillRect(x - penWidth / 2, y - penWidth / 2, penWidth, penWidth);
+  };
 
   const onMouseDown = (e) => {
     setIsDrawing(true);
-    console.log(e.target);
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
 
-    ctx.fillStyle = "#FF0000";
-    const penWidth = 10;
-    ctx.fillRect(x - penWidth / 2, y - penWidth / 2, penWidth, penWidth);
+    const x = e.clientX;
+    const y = e.clientY;
+
+    const drawing = { x, y };
+
+    // Emit message
+    socket.emit("drawing", drawing);
   };
 
   const onMouseUp = (e) => {
     setIsDrawing(false);
   };
 
-  // Make canvas responsive
+  // TODO: Make canvas responsive
   return (
     <div className="column box game-heigt is-two-thirds">
       <canvas
@@ -41,4 +56,4 @@ const PlayGround = () => {
   );
 };
 
-export default PlayGround;
+export default DrawingArea;

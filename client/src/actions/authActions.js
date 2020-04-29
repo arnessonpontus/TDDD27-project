@@ -46,12 +46,13 @@ export const register = ({ name, email, password }) => (dispatch) => {
 
   axios
     .post("/api/users", body, config)
-    .then((res) =>
+    .then((res) => {
+      window.location.reload(false); // Not reloading on state change
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data,
-      })
-    )
+      });
+    })
     .catch((err) => {
       console.log(err);
       dispatch(
@@ -76,12 +77,13 @@ export const login = ({ email, password }) => (dispatch) => {
 
   axios
     .post("/api/auth", body, config)
-    .then((res) =>
+    .then((res) => {
+      window.location.reload(false); // Not reloading on state change
       dispatch({
         type: LOGIN_SUCCESS,
         payload: res.data,
-      })
-    )
+      });
+    })
     .catch((err) => {
       console.log(err);
       dispatch(
@@ -95,6 +97,7 @@ export const login = ({ email, password }) => (dispatch) => {
 
 // Logout user
 export const logout = () => {
+  window.location.reload(false); // Not reloading on state change
   return {
     type: LOGOUT_SUCCESS,
   };

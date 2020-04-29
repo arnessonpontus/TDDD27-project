@@ -41,6 +41,12 @@ io.on("connection", (socket) => {
   socket.on("chatMessage", (msg) => {
     io.emit("message", msg);
   });
+
+  // Listen for drawing
+  socket.on("drawing", (drawing) => {
+    console.log(drawing);
+    io.emit("drawing", drawing);
+  });
 });
 
 // DB config
