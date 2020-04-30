@@ -17,30 +17,40 @@ const DrawingArea = () => {
     });
   }, []);
 
-  function draw(canvas, ctx, drawing) {
+  const draw = (canvas, ctx, drawing) => {
+    if (!drawing.isCurrDrawing) {
+      ctx.beginPath();
+      return;
+    }
     ctx.fillStyle = "deepskyblue";
     ctx.shadowColor = "dodgerblue";
-    ctx.shadowBlur = 20;
+    ctx.lineWidth = 10;
+    ctx.lineCap = "round";
     ctx.save();
     const rect = canvas.getBoundingClientRect();
-    ctx.fillRect(drawing.x - rect.left, drawing.y - rect.top, 5, 5);
+    ctx.lineTo(drawing.x - rect.left, drawing.y - rect.top);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(drawing.x - rect.left, drawing.y - rect.top);
     ctx.restore();
-  }
+  };
 
   const onMouseDown = (e) => {
     setIsDrawing(true);
-
-    const x = e.clientX;
-    const y = e.clientY;
-
-    const drawing = { x, y };
-
-    // Emit message
-    socket.emit("drawing", drawing);
   };
 
   const onMouseUp = (e) => {
     setIsDrawing(false);
+  };
+
+  const onMouseMove = (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    const drawing = { x, y, isCurrDrawing: isDrawing };
+
+    // Emit message
+    socket.emit("drawing", drawing);
   };
 
   // TODO: Make canvas responsive
@@ -50,8 +60,9 @@ const DrawingArea = () => {
         width={600}
         height={500}
         ref={canvasRef}
-        onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
       />
     </div>
   );
