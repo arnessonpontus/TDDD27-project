@@ -5,26 +5,27 @@ const socket = io("http://localhost:5000");
 
 const DrawingArea = () => {
   const [isDrawing, setIsDrawing] = useState(false);
-  const [ctx, setCtx] = useState(null);
 
   const canvasRef = React.useRef(null);
 
   useEffect(() => {
-    const context = canvasRef.current.getContext("2d");
-    setCtx(context);
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
 
     socket.on("drawing", (drawing) => {
-      draw(drawing);
+      draw(canvas, context, drawing);
     });
-  }, [canvasRef]);
+  }, []);
 
-  const draw = (drawing) => {
-    console.log(drawing);
-
-    //ctx.fillStyle = "#FF0000";
-    //const penWidth = 10;
-    //ctx.fillRect(x - penWidth / 2, y - penWidth / 2, penWidth, penWidth);
-  };
+  function draw(canvas, ctx, drawing) {
+    ctx.fillStyle = "deepskyblue";
+    ctx.shadowColor = "dodgerblue";
+    ctx.shadowBlur = 20;
+    ctx.save();
+    const rect = canvas.getBoundingClientRect();
+    ctx.fillRect(drawing.x - rect.left, drawing.y - rect.top, 5, 5);
+    ctx.restore();
+  }
 
   const onMouseDown = (e) => {
     setIsDrawing(true);
