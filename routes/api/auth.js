@@ -1,5 +1,4 @@
 // "Login" and authenticate
-
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
@@ -11,7 +10,7 @@ const auth = require("../../middleware/auth");
 const User = require("../../models/User");
 
 // @route  POST api/auth
-// @desc   Authenticate user
+// @desc   Login user
 // @access Public
 router.post("/", (req, res) => {
   const { email, password } = req.body;

@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const config = require("config");
 const http = require("http");
 const socketio = require("socket.io");
+const { userJoin, userLeave, getRoomUsers } = require("./utils/users");
 
 const app = express();
 const server = http.createServer(app); // For socketio
@@ -14,38 +15,63 @@ app.use(express.json());
 // Run when client connects
 io.on("connection", (socket) => {
   const now = new Date();
-  // Welcomes single user
-  socket.emit("message", {
-    text: "Welcome to the DOODLA",
-    name: "Bot",
-    time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
-  });
 
-  // Emits to all except the user
-  socket.broadcast.emit("message", {
-    text: "A user has joined the chat",
-    name: "Bot",
-    time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
-  });
+  socket.on("joinRoom", ({ name, room }) => {
+    // TODO: Bug with back space press, needs to be fixed
+    // Attempt to deny rejoining with multiple instances
+    if (getRoomUsers(room).find((user) => user.id === socket.id)) {
+      return;
+    }
+    const user = userJoin(socket.id, name, room);
 
-  socket.on("disconnect", () => {
-    // Emits to everyone
-    io.emit("message", {
-      text: "A user has left the chat",
+    socket.join(user.room);
+
+    // Welcomes single user
+    socket.emit("message", {
+      text: "Welcome to the DOODLA",
       name: "Bot",
       time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
     });
+
+    // Emits to all except the user
+    socket.broadcast.to(user.room).emit("message", {
+      text: `${user.name} has joined the chat`,
+      name: "Bot",
+      time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+    });
+
+    // Listen for chat message
+    socket.on("chatMessage", (msg) => {
+      io.to(user.room).emit("message", msg);
+    });
+
+    // Listen for drawing
+    socket.on("drawing", (drawing) => {
+      io.to(user.room).emit("drawing", drawing);
+    });
+
+    io.to(user.room).emit("roomUsers", {
+      room: user.room,
+      users: getRoomUsers(user.room),
+    });
   });
 
-  // Listen for chat message
-  socket.on("chatMessage", (msg) => {
-    io.emit("message", msg);
-  });
+  socket.on("disconnect", () => {
+    const user = userLeave(socket.id);
 
-  // Listen for drawing
-  socket.on("drawing", (drawing) => {
-    console.log(drawing);
-    io.emit("drawing", drawing);
+    if (user) {
+      // Emits to everyone
+      io.to(user.room).emit("message", {
+        text: `${user.name} has left the chat`,
+        name: "Bot",
+        time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+      });
+
+      io.to(user.room).emit("roomUsers", {
+        room: user.room,
+        users: getRoomUsers(user.room),
+      });
+    }
   });
 });
 

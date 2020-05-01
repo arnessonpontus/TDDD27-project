@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
+
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Message from "./Message";
 import ScrollToBottom from "react-scroll-to-bottom";
-
-const socket = io("http://localhost:5000");
 
 const ChatWindow = (props) => {
   const [text, setText] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
 
   useEffect(() => {
-    socket.on("message", (message) => {
+    props.socket.on("message", (message) => {
       setChatMessages((chatMessages) => [...chatMessages, message]);
     });
   }, []);
@@ -30,7 +28,7 @@ const ChatWindow = (props) => {
     const msg = { name, text, time };
 
     // Emit message
-    socket.emit("chatMessage", msg);
+    props.socket.emit("chatMessage", msg);
     setText("");
   };
 

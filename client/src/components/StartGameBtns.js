@@ -5,8 +5,11 @@ const StartGameBtns = () => {
   return (
     <Fragment>
       <div className="column buttons are-large are-primary is-half is-offset-one-quarter">
-        <Link className="button is-primary " to="/game">
-          Join game
+        <Link className="button is-primary " to="/game1">
+          Join game 1
+        </Link>
+        <Link className="button is-primary " to="/game2">
+          Join game 2
         </Link>
         <a href="/" className="button">
           Create Game

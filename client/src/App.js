@@ -29,7 +29,7 @@ function App() {
               <Route path="/" exact>
                 <LandingPage />
               </Route>
-              <PrivateRoute path="/game">
+              <PrivateRoute path="/:id">
                 <GameView />
               </PrivateRoute>
             </Switch>

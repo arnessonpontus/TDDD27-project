@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
-import io from "socket.io-client";
 import Slider from "react-input-slider";
 
-const socket = io("http://localhost:5000");
-
-const DrawingArea = () => {
+const DrawingArea = (props) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [penSize, setPenSize] = useState(10);
   const [penColor, setPenColor] = useState("black");
@@ -17,7 +14,7 @@ const DrawingArea = () => {
     const context = canvas.getContext("2d");
 
     // Receive drawing from server
-    socket.on("drawing", (drawing) => {
+    props.socket.on("drawing", (drawing) => {
       draw(canvas, context, drawing);
     });
   }, []);
@@ -66,7 +63,7 @@ const DrawingArea = () => {
     };
 
     // Emit message
-    socket.emit("drawing", drawing);
+    props.socket.emit("drawing", drawing);
   };
 
   const onChangeColor = (color) => {
@@ -121,7 +118,7 @@ const DrawingArea = () => {
           onChange={onChangeSize}
         />
         <button
-          onClick={() => socket.emit("drawing", { shouldClear: true })}
+          onClick={() => props.socket.emit("drawing", { shouldClear: true })}
           className="button is-small is-light is-right"
         >
           Clear
