@@ -3,7 +3,12 @@ const mongoose = require("mongoose");
 const config = require("config");
 const http = require("http");
 const socketio = require("socket.io");
-const { userJoin, userLeave, getRoomUsers } = require("./utils/users");
+const {
+  userJoin,
+  getCurrentUser,
+  userLeave,
+  getRoomUsers,
+} = require("./utils/users");
 
 const app = express();
 const server = http.createServer(app); // For socketio
@@ -17,11 +22,6 @@ io.on("connection", (socket) => {
   const now = new Date();
 
   socket.on("joinRoom", ({ name, room }) => {
-    // TODO: Bug with back space press, needs to be fixed
-    // Attempt to deny rejoining with multiple instances
-    if (getRoomUsers(room).find((user) => user.id === socket.id)) {
-      return;
-    }
     const user = userJoin(socket.id, name, room);
 
     socket.join(user.room);
@@ -40,20 +40,22 @@ io.on("connection", (socket) => {
       time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
     });
 
-    // Listen for chat message
-    socket.on("chatMessage", (msg) => {
-      io.to(user.room).emit("message", msg);
-    });
-
-    // Listen for drawing
-    socket.on("drawing", (drawing) => {
-      io.to(user.room).emit("drawing", drawing);
-    });
-
     io.to(user.room).emit("roomUsers", {
       room: user.room,
       users: getRoomUsers(user.room),
     });
+  });
+
+  // Listen for chat message
+  socket.on("chatMessage", (msg) => {
+    user = getCurrentUser(socket.id);
+    if (user) io.to(user.room).emit("message", msg);
+  });
+
+  // Listen for drawing
+  socket.on("drawing", (drawing) => {
+    user = getCurrentUser(socket.id);
+    if (user) io.to(user.room).emit("drawing", drawing);
   });
 
   socket.on("disconnect", () => {

@@ -37,7 +37,7 @@ const ChatWindow = (props) => {
   };
 
   return (
-    <div className="section column">
+    <div className="section column is-one-quarter">
       <div className="box ">
         <h1> Chat</h1>
         <ScrollToBottom className="game-height">
@@ -52,6 +52,7 @@ const ChatWindow = (props) => {
             );
           })}
         </ScrollToBottom>
+        <br></br>
         <form onSubmit={onSubmit}>
           <div className="field">
             <p className="control has-icons-left">

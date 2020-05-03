@@ -16,8 +16,13 @@ function userLeave(id) {
   }
 }
 
+// Get current user
+function getCurrentUser(id) {
+  return users.find((user) => user.id === id);
+}
+
 function getRoomUsers(room) {
   return users.filter((user) => user.room === room);
 }
 
-module.exports = { userJoin, userLeave, getRoomUsers };
+module.exports = { userJoin, getCurrentUser, userLeave, getRoomUsers };

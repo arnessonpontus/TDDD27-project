@@ -76,7 +76,7 @@ const DrawingArea = (props) => {
 
   // TODO: Make canvas responsive
   return (
-    <div className="column box game-heigt is-two-thirds">
+    <div className="column box game-heigt is-three-fifths">
       <div className="buttons">
         <button
           onClick={() => onChangeColor("Black")}

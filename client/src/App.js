@@ -24,7 +24,7 @@ function App() {
       <Router>
         <div className="App">
           <Navbar />
-          <div className="container">
+          <div>
             <Switch>
               <Route path="/" exact>
                 <LandingPage />
