@@ -8,7 +8,7 @@ import GameInfo from "./GameInfo";
 import io from "socket.io-client";
 
 const GameView = (props) => {
-  const { current: socket } = useRef(io("http://localhost:5000"));
+  const { current: socket } = useRef(io());
   const { id } = useParams();
   const roomId = id;
 
