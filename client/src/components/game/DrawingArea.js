@@ -5,6 +5,7 @@ const DrawingArea = (props) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [penSize, setPenSize] = useState(10);
   const [penColor, setPenColor] = useState("black");
+  const [isCanvasdisabled, setIsCanvasdisabled] = useState(false);
 
   // Init reference
   const canvasRef = React.useRef(null);
@@ -12,6 +13,14 @@ const DrawingArea = (props) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
+
+    props.socket.on("disableDraw", () => {
+      setIsCanvasdisabled(true);
+    });
+
+    props.socket.on("AllowDraw", () => {
+      setIsCanvasdisabled(false);
+    });
 
     // Receive drawing from server
     props.socket.on("drawing", (drawing) => {
@@ -51,6 +60,7 @@ const DrawingArea = (props) => {
 
   // Get params and send to server
   const onMouseMove = (e) => {
+    if (isCanvasdisabled) return;
     const x = e.clientX;
     const y = e.clientY;
 
@@ -118,8 +128,9 @@ const DrawingArea = (props) => {
           onChange={onChangeSize}
         />
         <button
+          disabled={isCanvasdisabled}
           onClick={() => props.socket.emit("drawing", { shouldClear: true })}
-          className="button is-small is-light is-right"
+          className="button is-small is-light"
         >
           Clear
         </button>

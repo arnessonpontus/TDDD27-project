@@ -4,13 +4,38 @@ import { Link } from "react-router-dom";
 const GameInfo = (props) => {
   const [room, setRoom] = useState("");
   const [roomUsers, setRoomUsers] = useState([]);
+  const [countDownTime, setCountDowntime] = useState(10);
+  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     props.socket.on("roomUsers", ({ room, users }) => {
       setRoom(room);
       setRoomUsers(users);
     });
+
+    props.socket.on("secondChange", ({ countDownTime }) => {
+      console.log(countDownTime);
+      setCountDowntime(countDownTime);
+
+      // Temporary, before correct game mechanics
+      if (countDownTime < 10) {
+        setGameStarted(true);
+      }
+
+      // Reset visual timer after some time
+      if (countDownTime < 1) {
+        setTimeout(() => {
+          setGameStarted(false);
+          setCountDowntime(10);
+        }, 2000);
+      }
+    });
   }, []);
+
+  const onGameStart = () => {
+    props.socket.emit("gameStart");
+    setGameStarted(true);
+  };
 
   return (
     <div className="section column">
@@ -34,6 +59,21 @@ const GameInfo = (props) => {
         {roomUsers.map((roomUser, i) => {
           return <p key={i}>{roomUser.name}</p>;
         })}
+      </div>
+
+      {console.log(gameStarted)}
+      <button
+        disabled={gameStarted}
+        className="button is-primary"
+        onClick={onGameStart}
+      >
+        {" "}
+        Start game
+      </button>
+      <div>
+        <span>Time:</span>
+        {"  "}
+        <span className="is-size-4">{countDownTime}</span>
       </div>
     </div>
   );

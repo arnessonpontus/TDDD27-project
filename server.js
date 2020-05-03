@@ -48,8 +48,34 @@ io.on("connection", (socket) => {
 
   // Listen for chat message
   socket.on("chatMessage", (msg) => {
-    user = getCurrentUser(socket.id);
+    const user = getCurrentUser(socket.id);
     if (user) io.to(user.room).emit("message", msg);
+  });
+
+  // Listen for game start
+  socket.on("gameStart", () => {
+    const user = getCurrentUser(socket.id);
+    if (!user) return; // Log out bug?
+
+    io.to(user.room).emit("drawing", { shouldClear: true });
+    socket.broadcast.to(user.room).emit("disableDraw");
+
+    // Game timer
+    let countDownTime = 10;
+    const countdown = setInterval(function () {
+      countDownTime--;
+
+      // Send visual update every second
+      io.to(user.room).emit("secondChange", {
+        countDownTime,
+      });
+
+      // End drawing session
+      if (countDownTime < 1) {
+        socket.broadcast.to(user.room).emit("AllowDraw");
+        clearInterval(countdown);
+      }
+    }, 1000);
   });
 
   // Listen for drawing

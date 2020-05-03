@@ -29,7 +29,6 @@ const GameView = (props) => {
   return (
     <div className="columns">
       <GameInfo socket={socket} io={io} />
-
       <PlayGround socket={socket} io={io} />
       <ChatWindow socket={socket} io={io} />
     </div>
