@@ -45,7 +45,11 @@ const Navbar = (props) => {
   );
 
   return (
-    <nav className="navbar" role="navigation" aria-label="main navigation">
+    <nav
+      className="navbar nav-margin-bot"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div className="navbar-brand">
         <a className="navbar-item" href="/">
           <img src="./images/first-draft-logo.png" alt="No-img" />
@@ -73,7 +77,7 @@ const Navbar = (props) => {
             Home
           </a>
 
-          <a href="/" className="navbar-item">
+          <a href="/howtoplay" className="navbar-item">
             How to play
           </a>
         </div>
