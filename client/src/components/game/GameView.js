@@ -8,7 +8,9 @@ import GameInfo from "./GameInfo";
 import io from "socket.io-client";
 
 const GameView = (props) => {
-  const { current: socket } = useRef(io());
+  const { current: socket } = useRef(
+    io("https://doodla-staging.herokuapp.com/")
+  );
   const { id } = useParams();
   const roomId = id;
 
