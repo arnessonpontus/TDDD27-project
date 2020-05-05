@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import LandingPage from "./components/LandingPage";
 import GameView from "./components/game/GameView";
 import Navbar from "./components/Navbar";
+import HowToPlay from "./components/HowToPlay";
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -28,6 +29,9 @@ function App() {
             <Switch>
               <Route path="/" exact>
                 <LandingPage />
+              </Route>
+              <Route path="/howtoplay">
+                <HowToPlay />
               </Route>
               <PrivateRoute path="/:id">
                 <GameView />

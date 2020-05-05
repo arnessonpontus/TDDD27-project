@@ -77,7 +77,7 @@ const Navbar = (props) => {
             Home
           </a>
 
-          <a href="/" className="navbar-item">
+          <a href="/howtoplay" className="navbar-item">
             How to play
           </a>
         </div>
