@@ -5,14 +5,23 @@ const DrawingArea = (props) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [penSize, setPenSize] = useState(10);
   const [penColor, setPenColor] = useState("black");
-  const [isCanvasdisabled, setIsCanvasdisabled] = useState(false);
+  const [isCanvasdisabled, setIsCanvasdisabled] = useState(true);
+  const [canvasWidth, setCanvasWidth] = useState(true);
+  const [canvasHeight, setCanvasHeight] = useState(true);
 
   // Init reference
   const canvasRef = React.useRef(null);
+  const parentRef = React.useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
+
+    const parent = parentRef.current;
+
+    // Set canvas dimensions to same as parent
+    setCanvasHeight(parent.clientHeight);
+    setCanvasWidth(parent.clientWidth);
 
     props.socket.on("disableDraw", () => {
       setIsCanvasdisabled(true);
@@ -58,7 +67,7 @@ const DrawingArea = (props) => {
     setIsDrawing(false);
   };
 
-  // Get params and send to server
+  // Get params for drawing and send to server
   const onMouseMove = (e) => {
     if (isCanvasdisabled) return;
     const x = e.clientX;
@@ -84,9 +93,8 @@ const DrawingArea = (props) => {
     setPenSize(e.x);
   };
 
-  // TODO: Make canvas responsive
   return (
-    <div className="column box game-heigt is-three-fifths">
+    <div className="column box is-three-fifths is-paddingless" ref={parentRef}>
       <div className="buttons">
         <button
           onClick={() => onChangeColor("Black")}
@@ -136,8 +144,8 @@ const DrawingArea = (props) => {
         </button>
       </div>
       <canvas
-        width={600}
-        height={500}
+        width={canvasWidth}
+        height={canvasHeight}
         ref={canvasRef}
         onMouseUp={onMouseUp}
         onMouseDown={onMouseDown}

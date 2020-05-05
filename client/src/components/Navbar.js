@@ -45,7 +45,11 @@ const Navbar = (props) => {
   );
 
   return (
-    <nav className="navbar" role="navigation" aria-label="main navigation">
+    <nav
+      className="navbar nav-margin-bot"
+      role="navigation"
+      aria-label="main navigation"
+    >
       <div className="navbar-brand">
         <a className="navbar-item" href="/">
           <img src="./images/first-draft-logo.png" alt="No-img" />

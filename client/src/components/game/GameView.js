@@ -8,7 +8,13 @@ import GameInfo from "./GameInfo";
 import io from "socket.io-client";
 
 const GameView = (props) => {
-  const { current: socket } = useRef(io());
+  // Why does using url instead of io() makes it less laggy when drawing?
+  //const { current: socket } = useRef(io("http://localhost:5000"));
+  const { current: socket } = useRef(
+    io("https://doodla-staging.herokuapp.com")
+  );
+
+  // Get room id from url
   const { id } = useParams();
   const roomId = id;
 

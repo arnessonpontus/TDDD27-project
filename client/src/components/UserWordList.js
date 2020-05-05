@@ -21,25 +21,26 @@ const UserWordList = (props) => {
     <div className="column">
       <article className="tile is-child notification is-primary is-full">
         <p className="title">Your added words</p>
-        {userWords.map(({ _id, name }) => (
-          <div key={_id} className="field is-grouped">
-            <div className="control">
-              <p className="subtitle">{name}</p>
+        <div style={{ height: 200, overflow: "auto" }} className="field">
+          {userWords.map(({ _id, name }) => (
+            <div key={_id} className="field is-grouped">
+              <div className="control">
+                <p className="subtitle">{name}</p>
+              </div>
+              <div
+                className="control"
+                onClick={() => {
+                  onDeleteClick(_id);
+                }}
+              >
+                <i
+                  style={{ cursor: "pointer" }}
+                  className="fas fa-trash is-medium"
+                ></i>
+              </div>
             </div>
-            <div
-              className="control"
-              onClick={() => {
-                console.log("click");
-                onDeleteClick(_id);
-              }}
-            >
-              <i
-                style={{ cursor: "pointer" }}
-                className="fas fa-trash is-medium"
-              ></i>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
         <Adder />
       </article>
     </div>

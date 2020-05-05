@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const config = require("config");
 const http = require("http");
-const socketio = require("socket.io");
 const {
   userJoin,
   getCurrentUser,
@@ -13,7 +12,7 @@ const path = require("path");
 
 const app = express();
 const server = http.createServer(app); // For socketio
-const io = socketio(server);
+const io = require("socket.io")(server);
 
 // Instead of body parser
 app.use(express.json());
@@ -54,15 +53,21 @@ io.on("connection", (socket) => {
   });
 
   // Listen for game start
-  socket.on("gameStart", () => {
+  socket.on("gameStart", ({ currentWord }) => {
     const user = getCurrentUser(socket.id);
     if (!user) return; // Log out bug?
 
+    // Send name of current drawer to everyone in room
+    io.to(user.room).emit("gameInfo", { currentDrawer: user.name });
+
+    // Send current word ot drawer
+    socket.emit("currentWord", { currentWord });
+
+    socket.emit("AllowDraw");
     io.to(user.room).emit("drawing", { shouldClear: true });
-    socket.broadcast.to(user.room).emit("disableDraw");
 
     // Game timer
-    let countDownTime = 10;
+    let countDownTime = 30;
     const countdown = setInterval(function () {
       countDownTime--;
 
@@ -73,7 +78,8 @@ io.on("connection", (socket) => {
 
       // End drawing session
       if (countDownTime < 1) {
-        socket.broadcast.to(user.room).emit("AllowDraw");
+        io.to(user.room).emit("disableDraw");
+
         clearInterval(countdown);
       }
     }, 1000);
