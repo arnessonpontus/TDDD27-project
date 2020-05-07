@@ -147,6 +147,9 @@ const DrawingArea = (props) => {
         width={canvasWidth}
         height={canvasHeight}
         ref={canvasRef}
+        onTouchEnd={onMouseUp}
+        onTouchStart={onMouseDown}
+        onTouchMove={onMouseMove}
         onMouseUp={onMouseUp}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}

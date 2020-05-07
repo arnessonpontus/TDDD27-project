@@ -52,7 +52,9 @@ const GameInfo = (props) => {
     // Get random word from all words in database
     const currentWord = allWords[Math.floor(Math.random() * allWords.length)];
 
-    props.socket.emit("gameStart", { currentWord });
+    props.socket.emit("gameStart", {
+      currentWord: currentWord.name,
+    });
     setGameStarted(true);
   };
 
@@ -85,7 +87,7 @@ const GameInfo = (props) => {
         <h1 className="is-size-7">Current drawer: </h1>
         <p>{currentDrawer}</p>
         <h1 className="is-size-7">Draw the word: </h1>
-        <p>{drawingWord.name}</p>
+        <p>{drawingWord}</p>
       </div>
 
       <button

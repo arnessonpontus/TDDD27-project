@@ -20,6 +20,9 @@ const ChatWindow = (props) => {
   const onSubmit = (e) => {
     e.preventDefault();
 
+    // Prevent form sending empty messages
+    if (text === "") return;
+
     const name = user.name;
     const now = new Date();
     const time =

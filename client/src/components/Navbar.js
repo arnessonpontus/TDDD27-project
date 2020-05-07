@@ -5,6 +5,7 @@ import LoginModal from "./auth/LoginModal";
 import { clearErrors } from "../actions/errorActions";
 import { logout } from "../actions/authActions";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const Navbar = (props) => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -51,16 +52,16 @@ const Navbar = (props) => {
       aria-label="main navigation"
     >
       <div className="navbar-brand">
-        <a className="navbar-item" href="/">
+        <Link className="navbar-item" to="/">
           <img src="./images/first-draft-logo.png" alt="No-img" />
-        </a>
+        </Link>
         <a
-          href="/#"
+          href="#/"
           role="button"
           className="navbar-burger burger"
           aria-label="menu"
           aria-expanded="false"
-          data-target="navbarBasicExample"
+          data-target="navbar"
           onClick={toggleNav}
         >
           <span aria-hidden="true"></span>
@@ -69,17 +70,17 @@ const Navbar = (props) => {
         </a>
       </div>
       <div
-        id="navbarBasicExample"
+        id="navbar"
         className={isNavOpen ? "navbar-menu is-active" : "navbar-menu"}
       >
         <div className="navbar-start">
-          <a href="/" className="navbar-item">
+          <Link to="/" className="navbar-item">
             Home
-          </a>
+          </Link>
 
-          <a href="/howtoplay" className="navbar-item">
+          <Link to="/howtoplay" className="navbar-item">
             How to play
-          </a>
+          </Link>
         </div>
         <div className="navbar-end">
           <div className="navbar-item">

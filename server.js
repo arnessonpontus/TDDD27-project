@@ -8,6 +8,7 @@ const {
   userLeave,
   getRoomUsers,
 } = require("./utils/users");
+const { setCurrentWord, getCurrentWord } = require("./utils/game");
 const path = require("path");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.json());
 
 // Run when client connects
 io.on("connection", (socket) => {
+  console.log("New socket connection");
   const now = new Date();
 
   socket.on("joinRoom", ({ name, room }) => {
@@ -50,12 +52,25 @@ io.on("connection", (socket) => {
   socket.on("chatMessage", (msg) => {
     const user = getCurrentUser(socket.id);
     if (user) io.to(user.room).emit("message", msg);
+
+    // Check if the message is the correct guess to the word being drawn
+    currWord = getCurrentWord();
+    if (msg.text.toLowerCase() === currWord.toLowerCase()) {
+      io.to(user.room).emit("message", {
+        text: `Correct word was ${currWord}, congratulations ${msg.name}!`,
+        name: "Bot",
+        time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+      });
+      setCurrentWord("");
+    }
   });
 
   // Listen for game start
   socket.on("gameStart", ({ currentWord }) => {
     const user = getCurrentUser(socket.id);
     if (!user) return; // Log out bug?
+
+    setCurrentWord(currentWord);
 
     // Send name of current drawer to everyone in room
     io.to(user.room).emit("gameInfo", { currentDrawer: user.name });
@@ -79,6 +94,7 @@ io.on("connection", (socket) => {
       // End drawing session
       if (countDownTime < 1) {
         io.to(user.room).emit("disableDraw");
+        setCurrentWord("");
 
         clearInterval(countdown);
       }
