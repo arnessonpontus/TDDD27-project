@@ -10,4 +10,4 @@ The project will be a site where users can log in and draw against each other in
 - Bulma will be used as a css framework
 - CI/CD with heroku
 
-Mid Course screencast: https://vimeo.com/user60014964/review/416075942/eb7dbb7a4f
+Mid course screencast: https://vimeo.com/416075942
