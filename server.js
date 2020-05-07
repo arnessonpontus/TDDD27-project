@@ -18,6 +18,7 @@ const io = require("socket.io")(server);
 // Instead of body parser
 app.use(express.json());
 
+// ###### Socket #######
 // Run when client connects
 io.on("connection", (socket) => {
   console.log("New socket connection");
@@ -126,7 +127,8 @@ io.on("connection", (socket) => {
   });
 });
 
-// DB config
+// ###### Database #######
+// Get database uri from config
 const db = config.get("mongoURI");
 
 // Connect to DB
@@ -139,6 +141,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log(err));
 
+// ###### Routes #######
 // Use Routes
 app.use("/api/words", require("./routes/api/words"));
 app.use("/api/users", require("./routes/api/users"));

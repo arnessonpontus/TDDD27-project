@@ -9,3 +9,5 @@ The project will be a site where users can log in and draw against each other in
 - JWT (Json web token) will probably be used for authentication
 - Bulma will be used as a css framework
 - CI/CD with heroku
+
+Mid Course screencast: https://vimeo.com/user60014964/review/416075942/eb7dbb7a4f
