@@ -46,6 +46,13 @@ const GameInfo = (props) => {
     });
   }, []);
 
+  props.socket.on("gameEnd", () => {
+    setGameStarted(false);
+    setCountDowntime(gameTime);
+    setCurrentDrawer("");
+    setDrawingWord("");
+  });
+
   const onGameStart = () => {
     const { allWords } = props.word;
 

@@ -23,7 +23,7 @@ const DrawingArea = (props) => {
     setCanvasHeight(parent.clientHeight);
     setCanvasWidth(parent.clientWidth);
 
-    props.socket.on("disableDraw", () => {
+    props.socket.on("gameEnd", () => {
       setIsCanvasdisabled(true);
     });
 

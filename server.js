@@ -58,7 +58,7 @@ io.on("connection", (socket) => {
     currWord = getCurrentWord();
     if (msg.text.toLowerCase() === currWord.toLowerCase()) {
       io.to(user.room).emit("message", {
-        text: `Correct word was ${currWord}, congratulations ${msg.name}!`,
+        text: `The correct word was ${currWord}, congratulations ${msg.name}!`,
         name: "Bot",
         time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
       });
@@ -93,8 +93,8 @@ io.on("connection", (socket) => {
       });
 
       // End drawing session
-      if (countDownTime < 1) {
-        io.to(user.room).emit("disableDraw");
+      if (countDownTime < 1 || getCurrentWord() === "") {
+        io.to(user.room).emit("gameEnd");
         setCurrentWord("");
 
         clearInterval(countdown);
