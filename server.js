@@ -83,7 +83,7 @@ io.on("connection", (socket) => {
     io.to(user.room).emit("drawing", { shouldClear: true });
 
     // Game timer
-    let countDownTime = 30;
+    let countDownTime = 60;
     const countdown = setInterval(function () {
       countDownTime--;
 

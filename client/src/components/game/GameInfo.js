@@ -5,7 +5,7 @@ import { getAllWords } from "../../actions/wordActions";
 import PropTypes from "prop-types";
 
 const GameInfo = (props) => {
-  const gameTime = 30;
+  const gameTime = 60;
   const [room, setRoom] = useState("");
   const [roomUsers, setRoomUsers] = useState([]);
   const [countDownTime, setCountDowntime] = useState(gameTime);
