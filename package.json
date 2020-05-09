@@ -22,6 +22,7 @@
   "author": "Pontus Arnesson",
   "license": "ISC",
   "dependencies": {
+    "badwords": "^1.0.0",
     "bcryptjs": "^2.4.3",
     "concurrently": "^5.1.0",
     "config": "^3.3.1",

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../../middleware/auth");
+var badwordsArray = require("badwords/array");
 
 // Word model
 const Word = require("../../models/Word");
@@ -26,9 +27,27 @@ router.get("/user", (req, res) => {
 // @desc   post a Word
 // @access Private // Change to private after login
 router.post("/", auth, (req, res) => {
+  name = req.body.name;
+  userID = req.body.userID;
+  category = req.body.category;
+
+  // validation
+  if (name.length > 20) {
+    return res.status(400).json({ msg: "That word is too long!" });
+  }
+  if (badwordsArray.includes(name.toLowerCase())) {
+    return res.status(400).json({ msg: "That word is not ok here!" });
+  }
+
+  Word.findOne({ name }).then((name) => {
+    if (name)
+      return res.status(400).json({ msg: "Word already exist in database!" });
+  });
+
   const newWord = new Word({
     name: req.body.name,
     userID: req.body.userID,
+    category: req.body.category,
   });
 
   newWord.save().then((word) => res.json(word));

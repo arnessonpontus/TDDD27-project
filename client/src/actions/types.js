@@ -3,6 +3,7 @@ export const GET_USER_WORDS = "GET_USER_WORDS";
 export const ADD_WORD = "ADD_WORD";
 export const DELETE_WORD = "DELETE_WORD";
 export const WORDS_LOADING = "WORDS_LOADING";
+export const ADD_WORD_FAIL = "ADD_WORD_FAIL";
 
 export const USER_LOADING = "USER_LOADING";
 export const USER_LOADED = "USER_LOADED";

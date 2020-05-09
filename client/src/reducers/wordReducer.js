@@ -29,7 +29,6 @@ export default function (state = initialState, action) {
     case DELETE_WORD:
       return {
         ...state,
-        // Might want to add for userWords
         allWords: state.allWords.filter((word) => word._id !== action.payload),
         userWords: state.userWords.filter(
           (word) => word._id !== action.payload
@@ -45,7 +44,7 @@ export default function (state = initialState, action) {
     case WORDS_LOADING:
       return {
         ...state,
-        loading: true,
+        loading: action.payload,
       };
     default:
       return state;

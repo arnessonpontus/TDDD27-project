@@ -5,12 +5,13 @@ import {
   ADD_WORD,
   DELETE_WORD,
   WORDS_LOADING,
+  ADD_WORD_FAIL,
 } from "./types";
 import { tokenConfig } from "./authActions";
 import { returnErrors } from "./errorActions";
 
 export const getAllWords = () => (dispatch) => {
-  dispatch(setWordsLoading());
+  dispatch(setWordsLoading(true));
   axios
     .get("/api/words/all")
     .then((res) => {
@@ -24,7 +25,7 @@ export const getAllWords = () => (dispatch) => {
     );
 };
 export const getUserWords = (userID) => (dispatch) => {
-  dispatch(setWordsLoading());
+  dispatch(setWordsLoading(true));
   axios
     .get("/api/words/user", {
       params: {
@@ -43,7 +44,7 @@ export const getUserWords = (userID) => (dispatch) => {
 };
 
 export const addWord = (word) => (dispatch, getState) => {
-  dispatch(setWordsLoading());
+  dispatch(setWordsLoading(true));
   axios
     .post("/api/words", word, tokenConfig(getState))
     .then((res) => {
@@ -52,13 +53,19 @@ export const addWord = (word) => (dispatch, getState) => {
         payload: res.data,
       });
     })
-    .catch((err) =>
-      dispatch(returnErrors(err.response.data, err.response.status))
-    );
+    .catch((err) => {
+      console.log(err);
+      dispatch(
+        returnErrors(err.response.data, err.response.status, "ADD_WORD_FAIL")
+      );
+      dispatch({
+        type: ADD_WORD_FAIL,
+      });
+    });
 };
 
 export const deleteWord = (id) => (dispatch, getState) => {
-  dispatch(setWordsLoading());
+  dispatch(setWordsLoading(true));
   axios
     .delete(`api/words/${id}`, tokenConfig(getState))
     .then((res) =>
@@ -72,8 +79,9 @@ export const deleteWord = (id) => (dispatch, getState) => {
     );
 };
 
-export const setWordsLoading = () => {
+export const setWordsLoading = (isLoading) => {
   return {
     type: WORDS_LOADING,
+    payload: isLoading,
   };
 };

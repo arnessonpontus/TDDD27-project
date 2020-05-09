@@ -1,17 +1,28 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { addWord } from "../actions/wordActions";
+import { addWord, setWordsLoading } from "../actions/wordActions";
+import AddCategoryModal from "./AddCategoryModal";
+import { clearErrors } from "../actions/errorActions";
+import propTypes from "prop-types";
 
 const Adder = (props) => {
-  const { user } = props.auth;
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+
   const [wordName, setWordName] = useState("");
   const onSubmit = (e) => {
     e.preventDefault();
-    const newWord = { name: wordName, userID: user._id };
+    if (wordName !== "") {
+      props.setWordsLoading(true);
+      toggleCategoryModal();
+    }
+  };
 
-    // Add word via add word action
-    props.addWord(newWord);
-    setWordName("");
+  const toggleCategoryModal = () => {
+    props.clearErrors();
+
+    //Set word to loading if category modal is open
+    if (wordName === "") props.setWordsLoading(false);
+    setIsCategoryModalOpen(!isCategoryModalOpen);
   };
 
   const onChange = (e) => {
@@ -37,10 +48,24 @@ const Adder = (props) => {
           </p>
         </div>
       </form>
+      <AddCategoryModal
+        wordName={wordName}
+        setWordName={setWordName}
+        isCategoryModalOpen={isCategoryModalOpen}
+        toggleCategoryModal={toggleCategoryModal}
+      />
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({ word: state.word, auth: state.auth });
+AddCategoryModal.propTypes = {
+  clearErrors: propTypes.func,
+};
 
-export default connect(mapStateToProps, { addWord })(Adder);
+const mapStateToProps = (state) => ({});
+
+export default connect(mapStateToProps, {
+  addWord,
+  setWordsLoading,
+  clearErrors,
+})(Adder);
