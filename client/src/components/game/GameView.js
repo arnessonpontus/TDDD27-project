@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import GameInfo from "./GameInfo";
 import io from "socket.io-client";
 
 const GameView = (props) => {
+  const [dropDownInfoState, setDropDownInfoState] = useState("");
   // Why does using url instead of io() makes it less laggy when drawing?
   // Should default to window.location
   const { current: socket } = useRef(
@@ -35,10 +36,63 @@ const GameView = (props) => {
     return () => socket.close();
   }, []);
 
+  const toggleGameInfo = () => {
+    if (dropDownInfoState === "is-active") {
+      setDropDownInfoState("");
+    } else {
+      setDropDownInfoState("is-active");
+    }
+  };
+
+  const isMobile = () => {
+    if (
+      navigator.userAgent.match(/Android/i) ||
+      navigator.userAgent.match(/webOS/i) ||
+      navigator.userAgent.match(/iPhone/i) ||
+      navigator.userAgent.match(/iPad/i) ||
+      navigator.userAgent.match(/iPod/i) ||
+      navigator.userAgent.match(/BlackBerry/i) ||
+      navigator.userAgent.match(/Windows Phone/i)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  // style={{ margin: "0px 5px 0px 5px" }}
+
   return (
     <div className="columns">
-      <GameInfo socket={socket} io={io} />
-      <DrawingArea socket={socket} io={io} />
+      {isMobile() ? (
+        <div className="container is-fluid">
+          <div className={" column dropdown " + dropDownInfoState}>
+            <div className="dropdown-trigger ">
+              <button
+                onClick={toggleGameInfo}
+                className="button is-small is-fullwidth"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu"
+              >
+                <span>Game info</span>
+                <span className="icon is-small">
+                  <i className="fas fa-angle-down" aria-hidden="true"></i>
+                </span>
+              </button>
+            </div>
+            <div className="dropdown-menu" id="dropdown-menu" role="menu">
+              <div className="dropdown-content">
+                <GameInfo socket={socket} io={io} />
+              </div>
+            </div>
+          </div>
+          <DrawingArea socket={socket} io={io} />
+        </div>
+      ) : (
+        <GameInfo socket={socket} io={io} />
+      )}
+      {!isMobile() ? <DrawingArea socket={socket} io={io} /> : null}
+
       <ChatWindow socket={socket} io={io} />
     </div>
   );

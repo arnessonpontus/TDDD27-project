@@ -40,17 +40,18 @@ router.post("/", auth, (req, res) => {
   }
 
   Word.findOne({ name }).then((name) => {
-    if (name)
+    if (name) {
       return res.status(400).json({ msg: "Word already exist in database!" });
-  });
+    } else {
+      const newWord = new Word({
+        name: req.body.name,
+        userID: req.body.userID,
+        category: req.body.category,
+      });
 
-  const newWord = new Word({
-    name: req.body.name,
-    userID: req.body.userID,
-    category: req.body.category,
+      newWord.save().then((word) => res.json(word));
+    }
   });
-
-  newWord.save().then((word) => res.json(word));
 });
 
 // @route  DELETE api/words:id

@@ -13,3 +13,7 @@ body {
  .nav-margin-bot{
    margin-bottom: 30px;
  }
+
+ .canvas{
+  touch-action: none;
+ }

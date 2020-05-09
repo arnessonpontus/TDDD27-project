@@ -59,6 +59,21 @@ const DrawingArea = (props) => {
     ctx.restore();
   };
 
+  // Should not be needed
+  /*
+  const onTouchDown = (e) => {
+    onMouseDown(e.touches[0]);
+  };
+
+  const onTouchUp = (e) => {
+    onMouseUp(e.changedTouches[0]);
+  };
+
+  const onTouchMove = (e) => {
+    onMouseMove(e.touches[0]);
+    e.preventDefault();
+  };
+*/
   const onMouseDown = (e) => {
     setIsDrawing(true);
   };
@@ -144,16 +159,13 @@ const DrawingArea = (props) => {
         </button>
       </div>
       <canvas
+        className="canvas"
         width={canvasWidth}
         height={canvasHeight}
         ref={canvasRef}
-        onTouchEnd={onMouseUp}
-        onTouchStart={onMouseDown}
-        onTouchMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseOut={onMouseUp}
+        onPointerDown={onMouseDown}
+        onPointerUp={onMouseUp}
+        onPointerMove={onMouseMove}
       />
     </div>
   );
