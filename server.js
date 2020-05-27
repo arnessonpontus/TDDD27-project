@@ -66,6 +66,11 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("changeCategory", ({ category }) => {
+    const user = getCurrentUser(socket.id);
+    io.to(user.room).emit("changeCategory", { category });
+  });
+
   // Listen for game start
   socket.on("gameStart", ({ currentWord }) => {
     const user = getCurrentUser(socket.id);

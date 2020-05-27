@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getAllWords } from "../../actions/wordActions";
@@ -12,6 +12,7 @@ const GameInfo = (props) => {
   const [gameStarted, setGameStarted] = useState(false);
   const [currentDrawer, setCurrentDrawer] = useState("");
   const [drawingWord, setDrawingWord] = useState("");
+  const [currentCategory, setCurrentCategory] = useState("All");
 
   useEffect(() => {
     props.getAllWords();
@@ -26,6 +27,10 @@ const GameInfo = (props) => {
 
     props.socket.on("currentWord", ({ currentWord }) => {
       setDrawingWord(currentWord);
+    });
+
+    props.socket.on("changeCategory", ({ category }) => {
+      setCurrentCategory(category);
     });
 
     props.socket.on("secondChange", ({ countDownTime }) => {
@@ -56,13 +61,29 @@ const GameInfo = (props) => {
   const onGameStart = () => {
     const { allWords } = props.word;
 
-    // Get random word from all words in database
-    const currentWord = allWords[Math.floor(Math.random() * allWords.length)];
+    // Check which category it is
+    let wordList = [];
+    if (currentCategory !== "All") {
+      wordList = allWords.filter(
+        (word) => word.category === currentCategory.toLowerCase()
+      );
+    } else {
+      wordList = allWords;
+    }
+
+    //Get random word from the list of words
+    const currentWord = wordList[Math.floor(Math.random() * wordList.length)];
 
     props.socket.emit("gameStart", {
       currentWord: currentWord.name,
     });
     setGameStarted(true);
+  };
+
+  const onChangeCategory = (e) => {
+    props.socket.emit("changeCategory", {
+      category: e.target.value,
+    });
   };
 
   return (
@@ -83,7 +104,6 @@ const GameInfo = (props) => {
         <h1 className="is-size-7">Room ID: </h1>
         <p>{room}</p>
 
-        <br></br>
         <p className="is-size-7">Current players:</p>
         {roomUsers.map((roomUser, i) => {
           return <p key={i}>{roomUser.name}</p>;
@@ -92,11 +112,33 @@ const GameInfo = (props) => {
       <p>Game info</p>
       <div className="box">
         <h1 className="is-size-7">Current drawer: </h1>
-        <p>{currentDrawer}</p>
-        <h1 className="is-size-7">Draw the word: </h1>
-        <p>{drawingWord}</p>
+        <p className="is-size-6">
+          {currentDrawer ? currentDrawer : "Not assigned"}
+        </p>
+        <h1 className="is-size-7">Current category: </h1>
+        <p className="is-size-6">
+          {currentCategory ? currentCategory : "Not assigned"}
+        </p>
+        {drawingWord ? (
+          <Fragment>
+            <h1 className="is-size-7">Draw the word: </h1>
+            <p className="is-size-6">{drawingWord}</p>{" "}
+          </Fragment>
+        ) : null}
       </div>
-
+      <div className="container">
+        <h1 className="is-size-7">Category: </h1>
+        <div class="select is-small">
+          <select onChange={onChangeCategory}>
+            <option value="All">All</option>
+            <option value="Object">Object</option>
+            <option value="Action">Action</option>
+            <option value="Person">Person/character</option>
+            <option value="Animal">Animal</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
       <button
         disabled={gameStarted}
         className="button is-primary"

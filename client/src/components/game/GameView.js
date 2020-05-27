@@ -93,7 +93,7 @@ const GameView = (props) => {
       )}
       {!isMobile() ? <DrawingArea socket={socket} io={io} /> : null}
 
-      <ChatWindow socket={socket} io={io} />
+      <ChatWindow isMobile={isMobile} socket={socket} io={io} />
     </div>
   );
 };
