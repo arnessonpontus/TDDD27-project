@@ -2,70 +2,81 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { getAllWords } from "../../actions/wordActions";
+import {
+  setCategory,
+  setDrawingWord,
+  setCurrentDrawer,
+  setGameStarted,
+  setCurrentTime,
+  setRoomUsers,
+  setRoom,
+  setGameTime,
+} from "../../actions/gameActions";
 import PropTypes from "prop-types";
 
 const GameInfo = (props) => {
-  const gameTime = 60;
-  const [room, setRoom] = useState("");
-  const [roomUsers, setRoomUsers] = useState([]);
-  const [countDownTime, setCountDowntime] = useState(gameTime);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [currentDrawer, setCurrentDrawer] = useState("");
-  const [drawingWord, setDrawingWord] = useState("");
-  const [currentCategory, setCurrentCategory] = useState("All");
+  const {
+    category,
+    drawingWord,
+    currentDrawer,
+    gameStarted,
+    currentTime,
+    roomUsers,
+    room,
+    gameTime,
+  } = props.game;
 
   useEffect(() => {
     props.getAllWords();
     props.socket.on("roomUsers", ({ room, users }) => {
-      setRoom(room);
-      setRoomUsers(users);
+      props.setRoom(room);
+      props.setRoomUsers(users);
     });
 
     props.socket.on("gameInfo", ({ currentDrawer }) => {
-      setCurrentDrawer(currentDrawer);
+      props.setCurrentDrawer(currentDrawer);
     });
 
     props.socket.on("currentWord", ({ currentWord }) => {
-      setDrawingWord(currentWord);
+      props.setDrawingWord(currentWord);
     });
 
     props.socket.on("changeCategory", ({ category }) => {
-      setCurrentCategory(category);
+      props.setCategory(category); // Forgot to put props. // This called funtion but did not dispatch to reducer
     });
 
     props.socket.on("secondChange", ({ countDownTime }) => {
-      setCountDowntime(countDownTime);
+      props.setCurrentTime(countDownTime);
 
       // Temporary, before correct game mechanics
       if (countDownTime < gameTime) {
-        setGameStarted(true);
+        props.setGameStarted(true);
       }
 
       // Reset visual timer after some time
       if (countDownTime < 1) {
         setTimeout(() => {
-          setGameStarted(false);
-          setCountDowntime(gameTime);
+          props.setGameStarted(false);
+          props.setCurrentTime(gameTime);
         }, 2000);
       }
     });
   }, []);
 
   props.socket.on("gameEnd", () => {
-    setGameStarted(false);
-    setCountDowntime(gameTime);
-    setCurrentDrawer("");
-    setDrawingWord("");
+    props.setGameStarted(false);
+    props.setCurrentTime(gameTime);
+    props.setCurrentDrawer("");
+    props.setDrawingWord("");
   });
-
   const onGameStart = () => {
     const { allWords } = props.word;
 
     // Check which category it is
     let wordList = [];
-    if (currentCategory !== "All") {
+    if (category !== "All") {
       wordList = allWords.filter(
-        (word) => word.category === currentCategory.toLowerCase()
+        (word) => word.category === category.toLowerCase()
       );
     } else {
       wordList = allWords;
@@ -77,7 +88,7 @@ const GameInfo = (props) => {
     props.socket.emit("gameStart", {
       currentWord: currentWord.name,
     });
-    setGameStarted(true);
+    props.setGameStarted(true);
   };
 
   const onChangeCategory = (e) => {
@@ -116,9 +127,7 @@ const GameInfo = (props) => {
           {currentDrawer ? currentDrawer : "Not assigned"}
         </p>
         <h1 className="is-size-7">Current category: </h1>
-        <p className="is-size-6">
-          {currentCategory ? currentCategory : "Not assigned"}
-        </p>
+        <p className="is-size-6">{category ? category : "Not assigned"}</p>
         {drawingWord ? (
           <Fragment>
             <h1 className="is-size-7">Draw the word: </h1>
@@ -128,7 +137,7 @@ const GameInfo = (props) => {
       </div>
       <div className="container">
         <h1 className="is-size-7">Category: </h1>
-        <div class="select is-small">
+        <div className="select is-small">
           <select onChange={onChangeCategory}>
             <option value="All">All</option>
             <option value="Object">Object</option>
@@ -150,7 +159,7 @@ const GameInfo = (props) => {
       <div>
         <span>Time:</span>
         {"  "}
-        <span className="is-size-4">{countDownTime}</span>
+        <span className="is-size-4">{currentTime}</span>
       </div>
     </div>
   );
@@ -158,11 +167,30 @@ const GameInfo = (props) => {
 
 GameInfo.propTypes = {
   getAllWords: PropTypes.func.isRequired,
+  setCategory: PropTypes.func.isRequired,
+  setDrawingWord: PropTypes.func.isRequired,
+  setCurrentDrawer: PropTypes.func.isRequired,
+  setGameStarted: PropTypes.func.isRequired,
+  setCurrentTime: PropTypes.func.isRequired,
+  setRoomUsers: PropTypes.func.isRequired,
+  setRoom: PropTypes.func.isRequired,
+  setGameTime: PropTypes.func.isRequired,
   word: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   word: state.word, // Get the word reducer from combine reducers
+  game: state.game,
 });
 
-export default connect(mapStateToProps, { getAllWords })(GameInfo);
+export default connect(mapStateToProps, {
+  getAllWords,
+  setCategory,
+  setDrawingWord,
+  setCurrentDrawer,
+  setGameStarted,
+  setCurrentTime,
+  setRoomUsers,
+  setRoom,
+  setGameTime,
+})(GameInfo);
