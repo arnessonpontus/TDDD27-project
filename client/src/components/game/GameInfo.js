@@ -61,14 +61,15 @@ const GameInfo = (props) => {
         }, 2000);
       }
     });
-  }, []);
 
-  props.socket.on("gameEnd", () => {
+    props.socket.on("gameEnd", () => {
     props.setGameStarted(false);
-    props.setCurrentTime(gameTime);
+    props.setCurrentTime(gameTime); 
     props.setCurrentDrawer("");
     props.setDrawingWord("");
-  });
+    });
+  }, []);
+
   const onGameStart = () => {
     const { allWords } = props.word;
 
