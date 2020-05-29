@@ -63,7 +63,8 @@ io.on("connection", (socket) => {
         time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
       });
       setCurrentWord("");
-      // TODO: Should send gameEnd event here instead of just resetting word
+
+      io.to(user.room).emit("gameEnd", msg.name); // Pass name of winner
     }
   });
 
@@ -100,7 +101,7 @@ io.on("connection", (socket) => {
 
       // End drawing session
       if (countDownTime < 1 || getCurrentWord() === "") {
-        io.to(user.room).emit("gameEnd");
+        io.to(user.room).emit("gameEnd", ""); // No winner
         setCurrentWord("");
 
         clearInterval(countdown);

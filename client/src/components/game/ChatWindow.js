@@ -16,6 +16,7 @@ const ChatWindow = (props) => {
   }, []);
 
   const { user } = props.auth;
+  const { currentTime } = props.game;
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -73,16 +74,23 @@ const ChatWindow = (props) => {
           </div>
         </form>
       </div>
+      <div className="has-text-centered">
+        <span>Time left:</span>
+        {"  "}
+        <span className="is-size-1">{currentTime}</span>
+      </div>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
+  game: state.game,
 });
 
 ChatWindow.propTypes = {
   auth: PropTypes.object.isRequired,
+  game: PropTypes.object.isRequired,
 };
 
 export default connect(mapStateToProps, {})(ChatWindow);

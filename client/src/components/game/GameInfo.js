@@ -127,12 +127,6 @@ const GameInfo = (props) => {
           </select>
         </div>
       </div>
-
-      <div>
-        <span>Time:</span>
-        {"  "}
-        <span className="is-size-4">{currentTime}</span>
-      </div>
     </div>
   );
 };

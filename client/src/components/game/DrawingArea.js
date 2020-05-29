@@ -12,8 +12,11 @@ const DrawingArea = (props) => {
   const [isCanvasdisabled, setIsCanvasdisabled] = useState(true);
   const [canvasWidth, setCanvasWidth] = useState(true);
   const [canvasHeight, setCanvasHeight] = useState(true);
+  const [showDrawingWord, setShowDrawingWord] = useState(false);
+  const [fadeWord, setFadeWord] = useState(false);
+  const [gameWinner, setGameWinner] = useState("");
 
-  const { category, gameStarted } = props.game;
+  const { category, gameStarted, drawingWord } = props.game;
   // Init reference
   const canvasRef = React.useRef(null);
   const parentRef = React.useRef(null);
@@ -28,8 +31,14 @@ const DrawingArea = (props) => {
     setCanvasHeight(parent.clientHeight);
     setCanvasWidth(parent.clientWidth);
 
-    props.socket.on("gameEnd", () => {
+    props.socket.on("gameEnd", (winner) => {
       setIsCanvasdisabled(true);
+      setFadeWord(false);
+
+      // Set winner if there is one
+      if (winner) {
+        setGameWinner(winner);
+      }
     });
 
     props.socket.on("AllowDraw", () => {
@@ -64,21 +73,6 @@ const DrawingArea = (props) => {
     ctx.restore();
   };
 
-  // Should not be needed
-  /*
-  const onTouchDown = (e) => {
-    onMouseDown(e.touches[0]);
-  };
-
-  const onTouchUp = (e) => {
-    onMouseUp(e.changedTouches[0]);
-  };
-
-  const onTouchMove = (e) => {
-    onMouseMove(e.touches[0]);
-    e.preventDefault();
-  };
-*/
   const onMouseDown = (e) => {
     setIsDrawing(true);
   };
@@ -133,12 +127,24 @@ const DrawingArea = (props) => {
       currentWord: currentWord.name,
     });
     props.setGameStarted(true);
+    setGameWinner("");
+
+    setShowDrawingWord(true);
+
+    setTimeout(() => {
+      setFadeWord(true);
+    }, 1000);
+
+    setTimeout(() => {
+      setShowDrawingWord(false);
+    }, 3000);
   };
 
   // TODO: Fix with correct canvas dims
+  // TODO: Fix position of winner text
   return (
     <div className="column box is-three-fifths is-paddingless" ref={parentRef}>
-      <div style={{ padding: 5 }} className="buttons has-background-light	">
+      <div style={{ padding: 5 }} className="buttons has-background-light">
         <button
           onClick={() => onChangeColor("Black")}
           className="button is-small is-black"
@@ -186,6 +192,17 @@ const DrawingArea = (props) => {
           Clear
         </button>
       </div>
+      <span
+        style={{
+          left: "33%",
+          userSelect: "none",
+          position: "absolute",
+          display: !gameStarted ? "" : "none",
+        }}
+        className={"is-size-1 has-text-primary"}
+      >
+        {gameWinner ? "Winner: " + gameWinner + "!" : ""}
+      </span>
       <div
         style={{
           display: "flex",
@@ -193,10 +210,23 @@ const DrawingArea = (props) => {
           alignItems: "center",
         }}
       >
+        <span
+          style={{
+            userSelect: "none",
+            position: "absolute",
+            display: showDrawingWord ? "" : "none",
+          }}
+          className={
+            fadeWord ? "gameword hide is-size-1" : "gameword is-size-1"
+          }
+        >
+          Draw: {drawingWord}
+        </span>
         <button
           style={{
             position: "absolute",
-            display: `${gameStarted ? "none" : ""}`,
+            display: gameStarted ? "none" : "",
+            boxShadow: "2px 2px 2px 2px #d1d1d1",
           }}
           className="button is-primary is-large"
           onClick={onGameStart}
