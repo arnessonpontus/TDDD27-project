@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
 
     // Welcomes single user
     socket.emit("message", {
-      text: "Welcome to the DOODLA",
+      text: "Welcome to DOODLA",
       name: "Bot",
       time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
     });
@@ -63,6 +63,7 @@ io.on("connection", (socket) => {
         time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
       });
       setCurrentWord("");
+      // TODO: Should send gameEnd event here instead of just resetting word
     }
   });
 

@@ -61,14 +61,14 @@ const GameInfo = (props) => {
         }, 2000);
       }
     });
-  }, []);
 
-  props.socket.on("gameEnd", () => {
-    props.setGameStarted(false);
-    props.setCurrentTime(gameTime);
-    props.setCurrentDrawer("");
-    props.setDrawingWord("");
-  });
+    props.socket.on("gameEnd", () => {
+      props.setGameStarted(false);
+      props.setCurrentTime(gameTime);
+      props.setCurrentDrawer("");
+      props.setDrawingWord("");
+    });
+  }, []);
 
   const onChangeCategory = (e) => {
     props.socket.emit("changeCategory", {

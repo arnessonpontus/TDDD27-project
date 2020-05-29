@@ -138,7 +138,7 @@ const DrawingArea = (props) => {
   // TODO: Fix with correct canvas dims
   return (
     <div className="column box is-three-fifths is-paddingless" ref={parentRef}>
-      <div style={{ padding: 5 }} className="buttons has-background-grey">
+      <div style={{ padding: 5 }} className="buttons has-background-light	">
         <button
           onClick={() => onChangeColor("Black")}
           className="button is-small is-black"
