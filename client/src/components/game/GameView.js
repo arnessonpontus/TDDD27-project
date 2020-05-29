@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Fragment } from "react";
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { connect } from "react-redux";
@@ -86,14 +86,25 @@ const GameView = (props) => {
               </div>
             </div>
           </div>
-          <DrawingArea socket={socket} io={io} />
         </div>
       ) : (
         <GameInfo socket={socket} io={io} />
       )}
-      {!isMobile() ? <DrawingArea socket={socket} io={io} /> : null}
-
-      <ChatWindow isMobile={isMobile} socket={socket} io={io} />
+      {!isMobile() ? (
+        <Fragment>
+          {" "}
+          <DrawingArea socket={socket} io={io} />
+          <ChatWindow isMobile={isMobile} socket={socket} io={io} />
+        </Fragment>
+      ) : (
+        <Fragment>
+          {" "}
+          <ChatWindow isMobile={isMobile} socket={socket} io={io} />
+          <div className="box">
+            <DrawingArea socket={socket} io={io} />
+          </div>
+        </Fragment>
+      )}
     </div>
   );
 };

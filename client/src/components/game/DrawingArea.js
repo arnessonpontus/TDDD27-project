@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-input-slider";
+import { connect } from "react-redux";
+import { getAllWords } from "../../actions/wordActions";
+import { setGameStarted } from "../../actions/gameActions";
+import PropTypes from "prop-types";
 
 const DrawingArea = (props) => {
   const [isDrawing, setIsDrawing] = useState(false);
@@ -9,6 +13,7 @@ const DrawingArea = (props) => {
   const [canvasWidth, setCanvasWidth] = useState(true);
   const [canvasHeight, setCanvasHeight] = useState(true);
 
+  const { category, gameStarted } = props.game;
   // Init reference
   const canvasRef = React.useRef(null);
   const parentRef = React.useRef(null);
@@ -108,9 +113,32 @@ const DrawingArea = (props) => {
     setPenSize(e.x);
   };
 
+  const onGameStart = () => {
+    const { allWords } = props.word;
+
+    // Check which category it is
+    let wordList = [];
+    if (category !== "All") {
+      wordList = allWords.filter(
+        (word) => word.category === category.toLowerCase()
+      );
+    } else {
+      wordList = allWords;
+    }
+
+    //Get random word from the list of words
+    const currentWord = wordList[Math.floor(Math.random() * wordList.length)];
+
+    props.socket.emit("gameStart", {
+      currentWord: currentWord.name,
+    });
+    props.setGameStarted(true);
+  };
+
+  // TODO: Fix with correct canvas dims
   return (
     <div className="column box is-three-fifths is-paddingless" ref={parentRef}>
-      <div className="buttons">
+      <div style={{ padding: 5 }} className="buttons has-background-grey">
         <button
           onClick={() => onChangeColor("Black")}
           className="button is-small is-black"
@@ -158,17 +186,49 @@ const DrawingArea = (props) => {
           Clear
         </button>
       </div>
-      <canvas
-        className="canvas"
-        width={canvasWidth}
-        height={canvasHeight}
-        ref={canvasRef}
-        onPointerDown={onMouseDown}
-        onPointerUp={onMouseUp}
-        onPointerMove={onMouseMove}
-      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <button
+          style={{
+            position: "absolute",
+            display: `${gameStarted ? "none" : ""}`,
+          }}
+          className="button is-primary is-large"
+          onClick={onGameStart}
+        >
+          {" "}
+          Start game
+        </button>
+        <canvas
+          className="canvas"
+          width={canvasWidth}
+          height={canvasHeight}
+          ref={canvasRef}
+          onPointerDown={onMouseDown}
+          onPointerUp={onMouseUp}
+          onPointerMove={onMouseMove}
+        />
+      </div>
     </div>
   );
 };
 
-export default DrawingArea;
+DrawingArea.propTypes = {
+  getAllWords: PropTypes.func.isRequired,
+  setGameStarted: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  word: state.word, // Get the word reducer from combine reducers
+  game: state.game,
+});
+
+export default connect(mapStateToProps, {
+  getAllWords,
+  setGameStarted,
+})(DrawingArea);

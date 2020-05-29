@@ -69,27 +69,6 @@ const GameInfo = (props) => {
     props.setCurrentDrawer("");
     props.setDrawingWord("");
   });
-  const onGameStart = () => {
-    const { allWords } = props.word;
-
-    // Check which category it is
-    let wordList = [];
-    if (category !== "All") {
-      wordList = allWords.filter(
-        (word) => word.category === category.toLowerCase()
-      );
-    } else {
-      wordList = allWords;
-    }
-
-    //Get random word from the list of words
-    const currentWord = wordList[Math.floor(Math.random() * wordList.length)];
-
-    props.socket.emit("gameStart", {
-      currentWord: currentWord.name,
-    });
-    props.setGameStarted(true);
-  };
 
   const onChangeCategory = (e) => {
     props.socket.emit("changeCategory", {
@@ -148,14 +127,7 @@ const GameInfo = (props) => {
           </select>
         </div>
       </div>
-      <button
-        disabled={gameStarted}
-        className="button is-primary"
-        onClick={onGameStart}
-      >
-        {" "}
-        Start game
-      </button>
+
       <div>
         <span>Time:</span>
         {"  "}
