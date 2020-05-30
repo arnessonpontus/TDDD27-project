@@ -8,7 +8,11 @@ const {
   userLeave,
   getRoomUsers,
 } = require("./utils/users");
-const { setCurrentWord, getCurrentWord } = require("./utils/game");
+const {
+  addCurrentWord,
+  removeCurrentWord,
+  getCurrentWord,
+} = require("./utils/game");
 const path = require("path");
 
 const app = express();
@@ -55,17 +59,25 @@ io.on("connection", (socket) => {
     if (user) io.to(user.room).emit("message", msg);
 
     // Check if the message is the correct guess to the word being drawn
-    currWord = getCurrentWord();
+    currWord = getCurrentWord(user.room).word;
     if (msg.text.toLowerCase() === currWord.toLowerCase()) {
       io.to(user.room).emit("message", {
         text: `The correct word was ${currWord}, congratulations ${msg.name}!`,
         name: "Bot",
         time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
       });
-      setCurrentWord("");
+      removeCurrentWord(user.room);
 
-      io.to(user.room).emit("gameEnd", msg.name); // Pass name of winner
+      io.to(user.room).emit("gameEnd", { name: msg.name, word: currWord }); // Pass name of winner
     }
+  });
+
+  socket.on("userGameEnd", () => {
+    const user = getCurrentUser(socket.id);
+    currWord = getCurrentWord(user.room).word;
+
+    if (user) io.to(user.room).emit("gameEnd", { name: "", word: currWord });
+    removeCurrentWord(user.room);
   });
 
   socket.on("changeCategory", ({ category }) => {
@@ -78,7 +90,7 @@ io.on("connection", (socket) => {
     const user = getCurrentUser(socket.id);
     if (!user) return; // Log out bug?
 
-    setCurrentWord(currentWord);
+    addCurrentWord(currentWord, user.room);
 
     // Send name of current drawer to everyone in room
     io.to(user.room).emit("gameInfo", { currentDrawer: user.name });
@@ -94,17 +106,24 @@ io.on("connection", (socket) => {
     const countdown = setInterval(function () {
       countDownTime--;
 
-      // Send visual update every second
-      io.to(user.room).emit("secondChange", {
-        countDownTime,
-      });
-
+      const currentWord = getCurrentWord(user.room);
       // End drawing session
-      if (countDownTime < 1 || getCurrentWord() === "") {
-        io.to(user.room).emit("gameEnd", ""); // No winner
-        setCurrentWord("");
+      if (countDownTime < 1 || !currentWord) {
+        // Ended by time
+        if (currentWord) {
+          io.to(user.room).emit("gameEnd", {
+            name: "",
+            word: currentWord.word,
+          }); // No winner
+          removeCurrentWord(user.room);
+        }
 
         clearInterval(countdown);
+      } else {
+        // Send visual update every second
+        io.to(user.room).emit("secondChange", {
+          countDownTime,
+        });
       }
     }, 1000);
   });

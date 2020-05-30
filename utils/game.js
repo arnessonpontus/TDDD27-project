@@ -1,13 +1,25 @@
-currentWord = "";
+currentWords = [];
 
 // Set current word to guess
-function setCurrentWord(currWord) {
-  currentWord = currWord;
-  return currentWord;
-}
-// Get current word to guess
-function getCurrentWord() {
-  return currentWord;
+function addCurrentWord(currWord, room) {
+  const currentWord = { word:currWord, room:room };
+
+  currentWords.push(currentWord);
+  return currentWord.word;
 }
 
-module.exports = { setCurrentWord, getCurrentWord };
+function removeCurrentWord(room) {
+
+  const index = currentWords.findIndex((currentWord) => currentWord.room === room);
+
+  if (index !== -1) {
+    return currentWords.splice(index, 1)[0];
+  }
+}
+// Get current word to guess
+function getCurrentWord(room) {
+
+  return currentWords.find((currentWord) => currentWord.room === room);
+}
+
+module.exports = { addCurrentWord, removeCurrentWord, getCurrentWord };

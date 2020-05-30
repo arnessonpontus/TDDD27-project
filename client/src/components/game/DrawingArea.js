@@ -16,6 +16,7 @@ const DrawingArea = (props) => {
   const [showDrawingWord, setShowDrawingWord] = useState(false);
   const [fadeWord, setFadeWord] = useState(false);
   const [gameWinner, setGameWinner] = useState("");
+  const [prevWord, setPrevWord] = useState("");
 
   const { category, gameStarted, drawingWord } = props.game;
   // Init reference
@@ -37,9 +38,11 @@ const DrawingArea = (props) => {
       setFadeWord(false);
 
       // Set winner if there is one
-      if (winner) {
-        setGameWinner(winner);
+      if (winner.name) {
+        setGameWinner(winner.name);
       }
+      // Set the prev word so it can be displayed
+      setPrevWord(winner.word);
     });
 
     props.socket.on("AllowDraw", () => {
@@ -203,22 +206,43 @@ const DrawingArea = (props) => {
           onClick={() => props.socket.emit("drawing", { shouldClear: true })}
           className="button is-small is-warning is-rounded"
         >
-          Clear
+          <span style={{ marginRight: 4 }}>
+            <p> Clear</p>
+          </span>
           <span>
             <i className="fas fa-broom is-large"></i>
+          </span>
+        </button>
+        <button
+          disabled={isCanvasdisabled}
+          onClick={() => props.socket.emit("userGameEnd")}
+          className="button is-small is-danger is-rounded"
+        >
+          <span style={{ marginRight: 4 }}>
+            <p> Give up</p>
+          </span>
+
+          <span>
+            <i className="fas fa-skull is-large"></i>
           </span>
         </button>
       </div>
       <span
         style={{
-          left: "33%",
+          left: "20%",
           userSelect: "none",
           position: "absolute",
           display: !gameStarted ? "" : "none",
         }}
-        className={"is-size-1 has-text-primary"}
+        className={`is-size-1 ${
+          gameWinner ? "has-text-primary" : "has-text-danger"
+        }`}
       >
-        {gameWinner ? "Winner: " + gameWinner + "!" : ""}
+        {gameWinner
+          ? gameWinner + " won! The word was: " + prevWord
+          : prevWord
+          ? "No winner. The word was: " + prevWord
+          : ""}
       </span>
       <div
         style={{
