@@ -4,10 +4,11 @@ import { connect } from "react-redux";
 import { getAllWords } from "../../actions/wordActions";
 import { setGameStarted } from "../../actions/gameActions";
 import PropTypes from "prop-types";
+import { CirclePicker } from "react-color";
 
 const DrawingArea = (props) => {
   const [isDrawing, setIsDrawing] = useState(false);
-  const [penSize, setPenSize] = useState(10);
+  const [penSize, setPenSize] = useState(20);
   const [penColor, setPenColor] = useState("black");
   const [isCanvasdisabled, setIsCanvasdisabled] = useState(true);
   const [canvasWidth, setCanvasWidth] = useState(true);
@@ -92,19 +93,20 @@ const DrawingArea = (props) => {
       y,
       isCurrDrawing: isDrawing,
       strokeWidth: penSize,
-      strokeColor: penColor,
+      strokeColor: "#" + penColor,
     };
 
     // Emit message
     props.socket.emit("drawing", drawing);
   };
 
+  // Remove # since svg do not want that in fill color
   const onChangeColor = (color) => {
-    setPenColor(color);
+    setPenColor(color.hex.substring(1));
   };
 
-  const onChangeSize = (e) => {
-    setPenSize(e.x);
+  const onChangeSize = (size) => {
+    setPenSize(size);
   };
 
   const onGameStart = () => {
@@ -145,51 +147,66 @@ const DrawingArea = (props) => {
   return (
     <div className="column box is-three-fifths is-paddingless" ref={parentRef}>
       <div style={{ padding: 5 }} className="buttons has-background-light">
-        <button
-          onClick={() => onChangeColor("Black")}
-          className="button is-small is-black"
-        >
-          black
-        </button>
-        <button
-          onClick={() => onChangeColor("red")}
-          className="button is-small is-danger"
-        >
-          Red
-        </button>
-        <button
-          onClick={() => onChangeColor("green")}
-          className="button is-small is-primary"
-        >
-          green
-        </button>
-        <button
-          onClick={() => onChangeColor("blue")}
-          className="button is-small is-info"
-        >
-          Blue
-        </button>
-        <button
-          onClick={() => onChangeColor("white")}
-          className="button is-small is-light"
-        >
-          Eraser
-        </button>
-
-        <Slider
-          axis="x"
-          xstep={0.1}
-          xmin={5}
-          xmax={50}
-          x={penSize}
-          onChange={onChangeSize}
+        <CirclePicker
+          onChangeComplete={onChangeColor}
+          circleSize={15}
+          circleSpacing={10}
+          width={120}
+          colors={[
+            "#000000",
+            "#e61717",
+            "#f5db67",
+            "#3af736",
+            "#2afaf0",
+            "#0070e0",
+            "#f29cff",
+            "#967a62",
+          ]}
         />
+        <span
+          style={{ cursor: "pointer", marginRight: 15 }}
+          onClick={() => onChangeColor({ hex: "#ffffff" })}
+        >
+          <i className="fas fa-eraser is-large"></i>
+        </span>
+        <div
+          style={{ display: "flex", alignItems: "center" }}
+          className="container"
+        >
+          <svg
+            className="pen-size"
+            onClick={() => onChangeSize(10)}
+            height="14"
+            width="14"
+          >
+            <circle cx="7" cy="7" r="5" fill="black" />
+          </svg>
+          <svg
+            className="pen-size"
+            onClick={() => onChangeSize(20)}
+            height="24"
+            width="24"
+          >
+            <circle cx="12" cy="12" r="10" fill="black" />
+          </svg>
+          <svg
+            className="pen-size"
+            onClick={() => onChangeSize(40)}
+            height="44"
+            width="44"
+          >
+            <circle cx="22" cy="22" r="20" fill="black" />
+          </svg>
+        </div>
         <button
           disabled={isCanvasdisabled}
           onClick={() => props.socket.emit("drawing", { shouldClear: true })}
-          className="button is-small is-light"
+          className="button is-small is-warning is-rounded"
         >
           Clear
+          <span>
+            <i className="fas fa-broom is-large"></i>
+          </span>
         </button>
       </div>
       <span
@@ -235,6 +252,11 @@ const DrawingArea = (props) => {
           Start game
         </button>
         <canvas
+          style={{
+            cursor: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='44' width='44' %0Acolor-rendering='optimizeQuality' %3E%3Ccircle cx='22' cy='22' r='${
+              penSize / 2
+            }' fill = '%23${penColor}' /%3E%3C/svg%3E") 22 22, pointer`,
+          }}
           className="canvas"
           width={canvasWidth}
           height={canvasHeight}
