@@ -28,8 +28,8 @@ io.on("connection", (socket) => {
   console.log("New socket connection");
   const now = new Date();
 
-  socket.on("joinRoom", ({ name, room }) => {
-    const user = userJoin(socket.id, name, room);
+  socket.on("joinRoom", ({ name, email, room }) => {
+    const user = userJoin(socket.id, name, email, room);
 
     socket.join(user.room);
 
@@ -59,16 +59,21 @@ io.on("connection", (socket) => {
     if (user) io.to(user.room).emit("message", msg);
 
     // Check if the message is the correct guess to the word being drawn
-    currWord = getCurrentWord(user.room).word;
-    if (msg.text.toLowerCase() === currWord.toLowerCase()) {
+    currWord = getCurrentWord(user.room);
+    if (msg.text.toLowerCase() === currWord.word.toLowerCase()) {
       io.to(user.room).emit("message", {
-        text: `The correct word was ${currWord}, congratulations ${msg.name}!`,
+        text: `The correct word was ${currWord.word}, congratulations ${msg.user.name}! Here is 20 extra points!`,
         name: "Bot",
         time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
       });
-      removeCurrentWord(user.room);
 
-      io.to(user.room).emit("gameEnd", { name: msg.name, word: currWord }); // Pass name of winner
+      io.to(user.room).emit("gameEnd", {
+        user,
+        drawingUser: currWord.drawer,
+        word: currWord.word,
+      }); // Pass name of winner
+
+      removeCurrentWord(user.room);
     }
   });
 
@@ -76,7 +81,7 @@ io.on("connection", (socket) => {
     const user = getCurrentUser(socket.id);
     currWord = getCurrentWord(user.room).word;
 
-    if (user) io.to(user.room).emit("gameEnd", { name: "", word: currWord });
+    if (user) io.to(user.room).emit("gameEnd", { user: null, word: currWord });
     removeCurrentWord(user.room);
   });
 
@@ -86,14 +91,15 @@ io.on("connection", (socket) => {
   });
 
   // Listen for game start
-  socket.on("gameStart", ({ currentWord }) => {
+  socket.on("gameStart", ({ currentWord, name, email }) => {
+    const currentDrawer = { name, email };
     const user = getCurrentUser(socket.id);
     if (!user) return; // Log out bug?
 
-    addCurrentWord(currentWord, user.room);
+    addCurrentWord(currentWord, currentDrawer, user.room);
 
     // Send name of current drawer to everyone in room
-    io.to(user.room).emit("gameInfo", { currentDrawer: user.name });
+    io.to(user.room).emit("gameInfo", { currentDrawer });
 
     // Send current word ot drawer
     socket.emit("currentWord", { currentWord });
@@ -112,7 +118,7 @@ io.on("connection", (socket) => {
         // Ended by time
         if (currentWord) {
           io.to(user.room).emit("gameEnd", {
-            name: "",
+            user: null,
             word: currentWord.word,
           }); // No winner
           removeCurrentWord(user.room);

@@ -87,7 +87,23 @@ const Navbar = (props) => {
             <strong className="navbar-item">
               {user ? `Welcome ${user.name}` : ""}
             </strong>
-            <div className="buttons">
+
+            {user ? (
+              <div
+                style={{
+                  borderWidth: 3,
+                  borderColor: "black",
+                  borderStyle: "solid",
+                }}
+                className="navbar-item"
+              >
+                Total points: {user.points}
+              </div>
+            ) : (
+              ""
+            )}
+
+            <div className="buttons navbar-item">
               {isAuthenticated ? authLinks : guestLinks}
             </div>
           </div>

@@ -58,4 +58,15 @@ router.post("/", (req, res) => {
   });
 });
 
+// @route  POST api/users/addPoints
+// @desc   Add points to user
+// @access Public
+
+router.post("/addPoints", (req, res) => {
+  const { email, points } = req.body;
+  User.updateOne({ email }, { $inc: { points: points } }).then(() => {
+    res.json(points);
+  });
+});
+
 module.exports = router;

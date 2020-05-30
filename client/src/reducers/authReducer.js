@@ -7,6 +7,7 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  ADD_POINTS,
 } from "../actions/types";
 
 const initialState = {
@@ -18,6 +19,15 @@ const initialState = {
 
 export default function (state = initialState, action) {
   switch (action.type) {
+    case ADD_POINTS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          points: state.user.points + action.payload,
+        },
+        isLoading: true,
+      };
     case USER_LOADING:
       return {
         ...state,

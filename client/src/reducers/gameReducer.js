@@ -12,7 +12,7 @@ import {
 
 const initialState = {
   category: "All",
-  currentDrawer: "",
+  currentDrawer: null,
   drawingWord: "",
   room: "",
   currentTime: 60, // TODO: Change to game init at gametime

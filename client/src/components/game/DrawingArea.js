@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Slider from "react-input-slider";
 import { connect } from "react-redux";
 import { getAllWords } from "../../actions/wordActions";
-import { setGameStarted } from "../../actions/gameActions";
+import {
+  setGameStarted,
+  addGamePoints,
+  setCurrentDrawer,
+} from "../../actions/gameActions";
 import PropTypes from "prop-types";
 import { CirclePicker } from "react-color";
 
@@ -18,7 +21,8 @@ const DrawingArea = (props) => {
   const [gameWinner, setGameWinner] = useState("");
   const [prevWord, setPrevWord] = useState("");
 
-  const { category, gameStarted, drawingWord } = props.game;
+  const { category, gameStarted, drawingWord, currentDrawer } = props.game;
+  const { user } = props.auth;
   // Init reference
   const canvasRef = React.useRef(null);
   const parentRef = React.useRef(null);
@@ -37,9 +41,15 @@ const DrawingArea = (props) => {
       setIsCanvasdisabled(true);
       setFadeWord(false);
 
-      // Set winner if there is one
-      if (winner.name) {
-        setGameWinner(winner.name);
+      // Add points to drawer and gueser
+      if (winner.user) {
+        if (winner.user.email === user.email) {
+          props.addGamePoints(winner.user.email, 20);
+        } else if (winner.drawingUser.email === user.email) {
+          props.addGamePoints(winner.drawingUser.email, 10);
+        }
+
+        setGameWinner(winner.user.name);
       }
       // Set the prev word so it can be displayed
       setPrevWord(winner.word);
@@ -130,6 +140,8 @@ const DrawingArea = (props) => {
 
     props.socket.emit("gameStart", {
       currentWord: currentWord.name,
+      name: user.name,
+      email: user.email,
     });
     props.setGameStarted(true);
     setGameWinner("");
@@ -297,14 +309,19 @@ const DrawingArea = (props) => {
 DrawingArea.propTypes = {
   getAllWords: PropTypes.func.isRequired,
   setGameStarted: PropTypes.func.isRequired,
+  addGamePoints: PropTypes.func.isRequired,
+  setCurrentDrawer: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   word: state.word, // Get the word reducer from combine reducers
   game: state.game,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, {
   getAllWords,
   setGameStarted,
+  addGamePoints,
+  setCurrentDrawer,
 })(DrawingArea);

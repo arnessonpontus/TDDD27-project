@@ -8,7 +8,10 @@ import {
   SET_ROOM_USERS,
   SET_ROOM,
   SET_GAME_STARTED,
+  ADD_POINTS,
 } from "./types";
+
+import axios from "axios";
 
 export const setCategory = (category) => {
   return {
@@ -64,4 +67,27 @@ export const setGameTime = (time) => {
     type: SET_GAME_TIME,
     payload: time,
   };
+};
+
+export const addGamePoints = (email, points) => (dispatch) => {
+  const body = JSON.stringify({ email, points });
+
+  const config = {
+    headers: {
+      "content-type": "application/json",
+    },
+  };
+
+  axios
+    .post("/api/users/addPoints", body, config)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: ADD_POINTS,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

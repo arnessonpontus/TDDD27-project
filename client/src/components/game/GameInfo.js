@@ -11,6 +11,7 @@ import {
   setRoomUsers,
   setRoom,
   setGameTime,
+  addGamePoints,
 } from "../../actions/gameActions";
 import PropTypes from "prop-types";
 
@@ -25,6 +26,8 @@ const GameInfo = (props) => {
     room,
     gameTime,
   } = props.game;
+
+  const { user } = props.auth;
 
   useEffect(() => {
     props.getAllWords();
@@ -65,7 +68,7 @@ const GameInfo = (props) => {
     props.socket.on("gameEnd", () => {
       props.setGameStarted(false);
       props.setCurrentTime(gameTime);
-      props.setCurrentDrawer("");
+      props.setCurrentDrawer(null);
       props.setDrawingWord("");
     });
   }, []);
@@ -103,7 +106,7 @@ const GameInfo = (props) => {
       <div className="box">
         <h1 className="is-size-7">Current drawer: </h1>
         <p className="is-size-6">
-          {currentDrawer ? currentDrawer : "Not assigned"}
+          {currentDrawer ? currentDrawer.name : "Not assigned"}
         </p>
         <h1 className="is-size-7">Current category: </h1>
         <p className="is-size-6">{category ? category : "Not assigned"}</p>
@@ -141,12 +144,14 @@ GameInfo.propTypes = {
   setRoomUsers: PropTypes.func.isRequired,
   setRoom: PropTypes.func.isRequired,
   setGameTime: PropTypes.func.isRequired,
+  addGamePoints: PropTypes.func.isRequired,
   word: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   word: state.word, // Get the word reducer from combine reducers
   game: state.game,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, {
