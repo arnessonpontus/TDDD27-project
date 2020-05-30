@@ -67,6 +67,7 @@ const LoginModal = (props) => {
               <label className="label">Email</label>
               <div className="control has-icons-left has-icons-right">
                 <input
+                  autoFocus
                   name="email"
                   className="input"
                   type="email"

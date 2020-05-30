@@ -1,20 +1,33 @@
-import React, { Fragment } from "react";
+import React, { useState, Fragment } from "react";
+
 import { Link } from "react-router-dom";
+import EnterRoomModal from "./EnterRoomModal";
 
 const StartGameBtns = () => {
+  const [isEnterRoomModalOpen, setIsEnterRoomModalOpen] = useState(false);
+  const [actionType, setActionType] = useState("joinRoom");
+
+  const toggleModal = (type) => {
+    setIsEnterRoomModalOpen(!isEnterRoomModalOpen);
+    setActionType(type)
+  };
+
   return (
     <Fragment>
       <div className="column buttons are-large are-primary is-half is-offset-one-quarter">
-        <Link className="button is-primary " to="/game1">
-          Join game 1
+        <Link to="#/" className="button is-primary " onClick={() => toggleModal("joinRoom")}>
+          Join game
         </Link>
-        <Link className="button is-primary " to="/game2">
-          Join game 2
+      
+        <Link to="#/" className="button " onClick={() => toggleModal("createRoom")}>
+          Create game
         </Link>
-        <a href="/" className="button">
-          Create Game
-        </a>
       </div>
+      <EnterRoomModal
+        isEnterRoomModalOpen={isEnterRoomModalOpen}
+        toggleModal={toggleModal}
+        actionType={actionType}
+      />
     </Fragment>
   );
 };
