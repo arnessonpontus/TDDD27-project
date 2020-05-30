@@ -179,7 +179,7 @@ const DrawingArea = (props) => {
             height="14"
             width="14"
           >
-            <circle cx="7" cy="7" r="5" fill="black" />
+            <circle cx="7" cy="7" r="5" fill={"#" + penColor} />
           </svg>
           <svg
             className="pen-size"
@@ -187,7 +187,7 @@ const DrawingArea = (props) => {
             height="24"
             width="24"
           >
-            <circle cx="12" cy="12" r="10" fill="black" />
+            <circle cx="12" cy="12" r="10" fill={"#" + penColor} />
           </svg>
           <svg
             className="pen-size"
@@ -195,7 +195,7 @@ const DrawingArea = (props) => {
             height="44"
             width="44"
           >
-            <circle cx="22" cy="22" r="20" fill="black" />
+            <circle cx="22" cy="22" r="20" fill={"#" + penColor} />
           </svg>
         </div>
         <button
