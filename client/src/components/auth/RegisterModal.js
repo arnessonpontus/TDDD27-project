@@ -73,6 +73,7 @@ const RegisterModal = (props) => {
               <label className="label">Username</label>
               <p className="control has-icons-left">
                 <input
+                  autoFocus
                   name="name"
                   className="input"
                   type="text"
