@@ -36,25 +36,12 @@ const GameInfo = (props) => {
       props.setRoomUsers(users);
     });
 
-    props.socket.on("gameInfo", ({ currentDrawer }) => {
-      props.setCurrentDrawer(currentDrawer);
-    });
-
-    props.socket.on("currentWord", ({ currentWord }) => {
-      props.setDrawingWord(currentWord);
-    });
-
     props.socket.on("changeCategory", ({ category }) => {
       props.setCategory(category); // Forgot to put props. // This called funtion but did not dispatch to reducer
     });
 
     props.socket.on("secondChange", ({ countDownTime }) => {
       props.setCurrentTime(countDownTime);
-
-      // Temporary, before correct game mechanics
-      if (countDownTime < gameTime) {
-        props.setGameStarted(true);
-      }
 
       // Reset visual timer after some time
       if (countDownTime < 1) {
