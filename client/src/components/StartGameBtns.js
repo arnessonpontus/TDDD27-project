@@ -9,17 +9,25 @@ const StartGameBtns = () => {
 
   const toggleModal = (type) => {
     setIsEnterRoomModalOpen(!isEnterRoomModalOpen);
-    setActionType(type)
+    setActionType(type);
   };
 
   return (
     <Fragment>
-      <div className="column buttons are-large are-primary is-half is-offset-one-quarter">
-        <Link to="#/" className="button is-primary " onClick={() => toggleModal("joinRoom")}>
+      <div className="column buttons are-large is-half is-offset-one-quarter">
+        <Link
+          to="#/"
+          className="button is-primary"
+          onClick={() => toggleModal("joinRoom")}
+        >
           Join game
         </Link>
-      
-        <Link to="#/" className="button " onClick={() => toggleModal("createRoom")}>
+
+        <Link
+          to="#/"
+          className="button is-light"
+          onClick={() => toggleModal("createRoom")}
+        >
           Create game
         </Link>
       </div>

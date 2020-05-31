@@ -60,9 +60,9 @@ io.on("connection", (socket) => {
 
     // Check if the message is the correct guess to the word being drawn
     currWord = getCurrentWord(user.room);
-    if (msg.text.toLowerCase() === currWord.word.toLowerCase()) {
+    if (currWord && msg.text.toLowerCase() === currWord.word.toLowerCase()) {
       io.to(user.room).emit("message", {
-        text: `The correct word was ${currWord.word}, congratulations ${msg.user.name}! Here is 20 extra points!`,
+        text: `The correct word was ${currWord.word}, congratulations ${msg.name}! Here is 20 extra points!`,
         name: "Bot",
         time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
       });

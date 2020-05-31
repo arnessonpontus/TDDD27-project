@@ -94,7 +94,7 @@ const GameView = (props) => {
       {!isMobile() ? (
         <Fragment>
           {" "}
-          <DrawingArea socket={socket} io={io} />
+          <DrawingArea isMobile={isMobile} socket={socket} io={io} />
           <ChatWindow isMobile={isMobile} socket={socket} io={io} />
         </Fragment>
       ) : (
@@ -102,7 +102,7 @@ const GameView = (props) => {
           {" "}
           <ChatWindow isMobile={isMobile} socket={socket} io={io} />
           <div className="box">
-            <DrawingArea socket={socket} io={io} />
+            <DrawingArea isMobile={isMobile} socket={socket} io={io} />
           </div>
         </Fragment>
       )}

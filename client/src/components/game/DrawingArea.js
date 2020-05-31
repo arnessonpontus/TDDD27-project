@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { connect } from "react-redux";
 import { getAllWords } from "../../actions/wordActions";
 import {
@@ -230,32 +230,47 @@ const DrawingArea = (props) => {
           onClick={() => props.socket.emit("userGameEnd")}
           className="button is-small is-danger is-rounded"
         >
-          <span style={{ marginRight: 4 }}>
-            <p> Give up</p>
-          </span>
-
-          <span>
-            <i className="fas fa-skull is-large"></i>
-          </span>
+          {props.isMobile() ? (
+            <span>
+              <p> X</p>
+            </span>
+          ) : (
+            <Fragment>
+              <span style={{ marginRight: 4 }}>
+                <p> Give up</p>
+              </span>
+              <span>
+                <i className="fas fa-skull is-large"></i>
+              </span>
+            </Fragment>
+          )}
         </button>
       </div>
-      <span
+      <div
         style={{
-          left: "20%",
-          userSelect: "none",
-          position: "absolute",
-          display: !gameStarted ? "" : "none",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-        className={`is-size-1 ${
-          gameWinner ? "has-text-primary" : "has-text-danger"
-        }`}
       >
-        {gameWinner
-          ? gameWinner + " won! The word was: " + prevWord
-          : prevWord
-          ? "No winner. The word was: " + prevWord
-          : ""}
-      </span>
+        <span
+          style={{
+            marginTop: 50,
+            userSelect: "none",
+            position: "absolute",
+            display: !gameStarted ? "" : "none",
+          }}
+          className={`is-size-1 ${
+            gameWinner ? "has-text-primary" : "has-text-danger"
+          }`}
+        >
+          {gameWinner
+            ? gameWinner + " won! The word was: " + prevWord
+            : prevWord
+            ? "No winner. The word was: " + prevWord
+            : ""}
+        </span>
+      </div>
       <div
         style={{
           display: "flex",

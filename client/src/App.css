@@ -1,24 +1,32 @@
 body {
-    font-family: 'Fredoka One', cursive;
-  }
+  font-family: "Fredoka One", cursive;
+}
 
-  .game-height {
-    height: 300px;
- }
+.welcome-title {
+  font-size: 10vh;
+}
 
- .less-padding {
-   padding: 0.5rem;
- }
+.game-height {
+  height: 300px;
+}
 
- .nav-margin-bot{
-   margin-bottom: 30px;
- }
+.mobile-game-height {
+  height: 150px;
+}
 
- .canvas{
+.less-padding {
+  padding: 0.5rem;
+}
+
+.nav-margin-bot {
+  margin-bottom: 30px;
+}
+
+.canvas {
   touch-action: none;
- }
+}
 
- .gameword {
+.gameword {
   transition: 2000ms all ease-out;
   opacity: 1;
   will-change: opacity;
@@ -27,6 +35,6 @@ body {
 .hide {
   opacity: 0;
 }
-.pen-size{
+.pen-size {
   cursor: pointer;
 }

@@ -41,10 +41,18 @@ const ChatWindow = (props) => {
   };
 
   return (
-    <div className="section column is-one-quarter">
+    <div
+      style={{
+        paddingTop: props.isMobile() ? 5 : null,
+        paddingBottom: props.isMobile() ? 5 : null,
+      }}
+      className="section column is-one-quarter"
+    >
       <div className="box ">
         <h1> Chat</h1>
-        <ScrollToBottom className="game-height">
+        <ScrollToBottom
+          className={!props.isMobile() ? "game-height" : "mobile-game-height"}
+        >
           {chatMessages.map((msg, i) => {
             return (
               <Message

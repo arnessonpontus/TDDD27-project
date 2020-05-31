@@ -81,7 +81,6 @@ export const addGamePoints = (email, points) => (dispatch) => {
   axios
     .post("/api/users/addPoints", body, config)
     .then((res) => {
-      console.log(res.data);
       dispatch({
         type: ADD_POINTS,
         payload: res.data,
