@@ -272,9 +272,9 @@ const DrawingArea = (props) => {
             gameWinner ? "has-text-primary" : "has-text-danger"
           }`}
         >
-          {gameWinner
+          {gameWinner && !props.isMobile()
             ? gameWinner + " won! The word was: " + prevWord
-            : prevWord
+            : prevWord && !props.isMobile()
             ? "No winner. The word was: " + prevWord
             : ""}
         </span>
@@ -293,7 +293,7 @@ const DrawingArea = (props) => {
             display: showDrawingWord ? "" : "none",
           }}
           className={
-            fadeWord ? "gameword hide is-size-1" : "gameword is-size-1"
+            fadeWord ? "gameword hide is-size-3" : "gameword is-size-3"
           }
         >
           Draw: {drawingWord}

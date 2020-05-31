@@ -85,6 +85,12 @@ io.on("connection", (socket) => {
     if (!user) return;
     currWord = getCurrentWord(user.room).word;
 
+    io.to(user.room).emit("message", {
+      text: `No one had a correct guess :( The word was: ${currWord}`,
+      name: "Sad Bot",
+      time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+    });
+
     io.to(user.room).emit("gameEnd", { user: null, word: currWord });
     removeCurrentWord(user.room);
   });
@@ -118,6 +124,13 @@ io.on("connection", (socket) => {
       if (countDownTime < 1 || !currentWord) {
         // Ended by time
         if (currentWord) {
+          io.to(user.room).emit("message", {
+            text: `No one had a correct guess :( The word was: ${currentWord.word}`,
+            name: "Sad Bot",
+            time:
+              now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+          });
+
           io.to(user.room).emit("gameEnd", {
             user: null,
             word: currentWord.word,
