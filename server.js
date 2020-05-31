@@ -56,7 +56,9 @@ io.on("connection", (socket) => {
   // Listen for chat message
   socket.on("chatMessage", (msg) => {
     const user = getCurrentUser(socket.id);
-    if (user) io.to(user.room).emit("message", msg);
+    if (!user) return;
+
+    io.to(user.room).emit("message", msg);
 
     // Check if the message is the correct guess to the word being drawn
     currWord = getCurrentWord(user.room);
@@ -80,15 +82,16 @@ io.on("connection", (socket) => {
 
   socket.on("userGameEnd", () => {
     const user = getCurrentUser(socket.id);
+    if (!user) return;
     currWord = getCurrentWord(user.room).word;
 
-    if (user) io.to(user.room).emit("gameEnd", { user: null, word: currWord });
+    io.to(user.room).emit("gameEnd", { user: null, word: currWord });
     removeCurrentWord(user.room);
   });
 
   socket.on("changeCategory", ({ category }) => {
     const user = getCurrentUser(socket.id);
-    io.to(user.room).emit("changeCategory", { category });
+    if (user) io.to(user.room).emit("changeCategory", { category });
   });
 
   // Listen for game start
