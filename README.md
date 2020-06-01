@@ -11,3 +11,6 @@ The project will be a site where users can log in and draw against each other in
 - CI/CD with heroku
 
 Mid course screencast: https://vimeo.com/416075942
+
+Project screencast: https://youtu.be/32kBM48xzho
+Code screencast: https://youtu.be/gQKAMYMtwfQ

@@ -4,6 +4,8 @@ import GameView from "./components/game/GameView";
 import Navbar from "./components/Navbar";
 import HowToPlay from "./components/HowToPlay";
 import "./App.css";
+import Analytics from "react-router-ga";
+
 import {
   BrowserRouter as Router,
   Route,
@@ -23,22 +25,24 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <div className="App">
-          <Navbar />
-          <div>
-            <Switch>
-              <Route path="/" exact>
-                <LandingPage />
-              </Route>
-              <Route path="/howtoplay">
-                <HowToPlay />
-              </Route>
-              <PrivateRoute path="/:id">
-                <GameView />
-              </PrivateRoute>
-            </Switch>
+        <Analytics id="UA-151646007-2" debug>
+          <div className="App">
+            <Navbar />
+            <div>
+              <Switch>
+                <Route path="/" exact>
+                  <LandingPage />
+                </Route>
+                <Route path="/howtoplay">
+                  <HowToPlay />
+                </Route>
+                <PrivateRoute path="/:id">
+                  <GameView />
+                </PrivateRoute>
+              </Switch>
+            </div>
           </div>
-        </div>
+        </Analytics>
       </Router>
     </Provider>
   );
