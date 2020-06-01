@@ -62,6 +62,7 @@ io.on("connection", (socket) => {
 
     // Check if the message is the correct guess to the word being drawn
     currWord = getCurrentWord(user.room);
+
     if (currWord && msg.text.toLowerCase() === currWord.word.toLowerCase()) {
       io.to(user.room).emit("message", {
         text: `The correct word was ${currWord.word}, congratulations ${msg.name}! Here is 20 extra points!`,
@@ -84,6 +85,12 @@ io.on("connection", (socket) => {
     if (!user) return;
     currWord = getCurrentWord(user.room).word;
 
+    io.to(user.room).emit("message", {
+      text: `No one had a correct guess :( The word was: ${currWord}`,
+      name: "Sad Bot",
+      time: now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+    });
+
     io.to(user.room).emit("gameEnd", { user: null, word: currWord });
     removeCurrentWord(user.room);
   });
@@ -102,10 +109,7 @@ io.on("connection", (socket) => {
     addCurrentWord(currentWord, currentDrawer, user.room);
 
     // Send name of current drawer to everyone in room
-    io.to(user.room).emit("gameInfo", { currentDrawer });
-
-    // Send current word ot drawer
-    socket.emit("currentWord", { currentWord });
+    io.to(user.room).emit("gameStart", { currentDrawer, currentWord });
 
     socket.emit("AllowDraw");
     io.to(user.room).emit("drawing", { shouldClear: true });
@@ -120,6 +124,13 @@ io.on("connection", (socket) => {
       if (countDownTime < 1 || !currentWord) {
         // Ended by time
         if (currentWord) {
+          io.to(user.room).emit("message", {
+            text: `No one had a correct guess :( The word was: ${currentWord.word}`,
+            name: "Sad Bot",
+            time:
+              now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
+          });
+
           io.to(user.room).emit("gameEnd", {
             user: null,
             word: currentWord.word,

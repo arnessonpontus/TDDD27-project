@@ -5,6 +5,7 @@ import {
   setGameStarted,
   addGamePoints,
   setCurrentDrawer,
+  setDrawingWord,
 } from "../../actions/gameActions";
 import PropTypes from "prop-types";
 import { CirclePicker } from "react-color";
@@ -36,6 +37,13 @@ const DrawingArea = (props) => {
     // Set canvas dimensions to same as parent
     setCanvasHeight(parent.clientHeight);
     setCanvasWidth(parent.clientWidth);
+
+    props.socket.on("gameStart", ({ currentDrawer, currentWord }) => {
+      props.setCurrentDrawer(currentDrawer);
+      props.setDrawingWord(currentWord);
+      props.setGameStarted(true);
+      setGameWinner("");
+    });
 
     props.socket.on("gameEnd", (winner) => {
       setIsCanvasdisabled(true);
@@ -264,9 +272,9 @@ const DrawingArea = (props) => {
             gameWinner ? "has-text-primary" : "has-text-danger"
           }`}
         >
-          {gameWinner
+          {gameWinner && !props.isMobile()
             ? gameWinner + " won! The word was: " + prevWord
-            : prevWord
+            : prevWord && !props.isMobile()
             ? "No winner. The word was: " + prevWord
             : ""}
         </span>
@@ -285,7 +293,7 @@ const DrawingArea = (props) => {
             display: showDrawingWord ? "" : "none",
           }}
           className={
-            fadeWord ? "gameword hide is-size-1" : "gameword is-size-1"
+            fadeWord ? "gameword hide is-size-3" : "gameword is-size-3"
           }
         >
           Draw: {drawingWord}
@@ -326,6 +334,7 @@ DrawingArea.propTypes = {
   setGameStarted: PropTypes.func.isRequired,
   addGamePoints: PropTypes.func.isRequired,
   setCurrentDrawer: PropTypes.func.isRequired,
+  setDrawingWord: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -339,4 +348,5 @@ export default connect(mapStateToProps, {
   setGameStarted,
   addGamePoints,
   setCurrentDrawer,
+  setDrawingWord,
 })(DrawingArea);
