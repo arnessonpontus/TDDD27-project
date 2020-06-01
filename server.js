@@ -26,9 +26,9 @@ app.use(express.json());
 // Run when client connects
 io.on("connection", (socket) => {
   console.log("New socket connection");
-  const now = new Date();
 
   socket.on("joinRoom", ({ name, email, room }) => {
+    const now = new Date();
     const user = userJoin(socket.id, name, email, room);
 
     socket.join(user.room);
@@ -55,6 +55,7 @@ io.on("connection", (socket) => {
 
   // Listen for chat message
   socket.on("chatMessage", (msg) => {
+    const now = new Date();
     const user = getCurrentUser(socket.id);
     if (!user) return;
 
@@ -81,6 +82,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("userGameEnd", () => {
+    const now = new Date();
     const user = getCurrentUser(socket.id);
     if (!user) return;
     currWord = getCurrentWord(user.room).word;
@@ -102,6 +104,7 @@ io.on("connection", (socket) => {
 
   // Listen for game start
   socket.on("gameStart", ({ currentWord, name, email }) => {
+    const now = new Date();
     const currentDrawer = { name, email };
     const user = getCurrentUser(socket.id);
     if (!user) return; // Log out bug?
@@ -155,6 +158,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    const now = new Date();
     const user = userLeave(socket.id);
 
     if (user) {
