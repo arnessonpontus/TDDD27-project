@@ -110,7 +110,7 @@ const GameInfo = (props) => {
         </p>
         <h1 className="is-size-7">Current category: </h1>
         <p className="is-size-6">{category ? category : "Not assigned"}</p>
-        {drawingWord ? (
+        {drawingWord && currentDrawer !== user.name ? (
           <Fragment>
             <h1 className="is-size-7">Draw the word: </h1>
             <p className="is-size-6">{drawingWord}</p>{" "}
