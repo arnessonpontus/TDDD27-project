@@ -21,6 +21,7 @@ const DrawingArea = (props) => {
   const [fadeWord, setFadeWord] = useState(false);
   const [gameWinner, setGameWinner] = useState("");
   const [prevWord, setPrevWord] = useState("");
+  const [isClicking, setIsClicking] = useState(false);
 
   const { category, gameStarted, drawingWord, currentDrawer } = props.game;
   const { user } = props.auth;
@@ -79,38 +80,55 @@ const DrawingArea = (props) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       return;
     }
+
+    // If only hovering over canvas
     if (!drawing.isCurrDrawing) {
       ctx.beginPath();
       return;
     }
-    ctx.lineWidth = drawing.strokeWidth;
-    ctx.lineCap = "round";
-    ctx.save();
+
     const rect = canvas.getBoundingClientRect();
-    ctx.strokeStyle = drawing.strokeColor;
-    ctx.lineTo(drawing.x_real * rect.width, drawing.y_real * rect.height);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(drawing.x_real * rect.width, drawing.y_real * rect.height);
-    ctx.restore();
+
+    // Check if type is mouseUp, then treat it as a single tap (click)
+    if (drawing.mouseType === "mouseUp") {
+      ctx.fillStyle = drawing.strokeColor;
+
+      ctx.beginPath();
+      ctx.arc(
+        drawing.x_real * rect.width,
+        drawing.y_real * rect.height,
+        drawing.strokeWidth / 2,
+        0,
+        Math.PI * 2,
+        true
+      );
+      ctx.fill();
+    } else {
+      ctx.lineWidth = drawing.strokeWidth;
+      ctx.lineCap = "round";
+      ctx.save();
+
+      ctx.strokeStyle = drawing.strokeColor;
+
+      // Multiply by own canvas dimensions to get correct placement for drawing
+      ctx.lineTo(drawing.x_real * rect.width, drawing.y_real * rect.height);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(drawing.x_real * rect.width, drawing.y_real * rect.height);
+      ctx.restore();
+    }
   };
 
-  const onMouseDown = (e) => {
-    setIsDrawing(true);
-    onMouseMove(e);
-  };
-
-  const onMouseUp = (e) => {
-    setIsDrawing(false);
-  };
-
-  // Get params for drawing and send to server
-  const onMouseMove = (e) => {
+  const registerDrawing = (e, mouseType) => {
     if (isCanvasdisabled) return;
     const x = e.clientX;
     const y = e.clientY;
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
+
+    // Taking client x/y to get pos of the window and
+    // then subtract upper left corner to get correct pos
+    // ivide by width and height to get between 0 and 1
     const x_real = (x - rect.left) / rect.width;
     const y_real = (y - rect.top) / rect.height;
 
@@ -120,10 +138,26 @@ const DrawingArea = (props) => {
       isCurrDrawing: isDrawing,
       strokeWidth: penSize,
       strokeColor: "#" + penColor,
+      mouseType,
     };
 
     // Emit message
     props.socket.emit("drawing", drawing);
+  };
+
+  const onMouseDown = (e) => {
+    setIsDrawing(true);
+    registerDrawing(e, "mouseDown");
+  };
+
+  const onMouseUp = (e) => {
+    setIsDrawing(false);
+    registerDrawing(e, "mouseUp");
+  };
+
+  // Get params for drawing and send to server
+  const onMouseMove = (e) => {
+    registerDrawing(e, "mouseMove");
   };
 
   // Remove # since svg do not want that in fill color
