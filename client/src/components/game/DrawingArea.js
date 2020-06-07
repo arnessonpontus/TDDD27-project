@@ -88,15 +88,16 @@ const DrawingArea = (props) => {
     ctx.save();
     const rect = canvas.getBoundingClientRect();
     ctx.strokeStyle = drawing.strokeColor;
-    ctx.lineTo(drawing.x - rect.left, drawing.y - rect.top);
+    ctx.lineTo(drawing.x_real * rect.width, drawing.y_real * rect.height);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(drawing.x - rect.left, drawing.y - rect.top);
+    ctx.moveTo(drawing.x_real * rect.width, drawing.y_real * rect.height);
     ctx.restore();
   };
 
   const onMouseDown = (e) => {
     setIsDrawing(true);
+    onMouseMove(e);
   };
 
   const onMouseUp = (e) => {
@@ -108,10 +109,14 @@ const DrawingArea = (props) => {
     if (isCanvasdisabled) return;
     const x = e.clientX;
     const y = e.clientY;
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x_real = (x - rect.left) / rect.width;
+    const y_real = (y - rect.top) / rect.height;
 
     const drawing = {
-      x,
-      y,
+      x_real,
+      y_real,
       isCurrDrawing: isDrawing,
       strokeWidth: penSize,
       strokeColor: "#" + penColor,
