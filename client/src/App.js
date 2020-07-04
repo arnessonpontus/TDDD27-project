@@ -4,6 +4,7 @@ import GameView from "./components/game/GameView";
 import Navbar from "./components/Navbar";
 import HowToPlay from "./components/HowToPlay";
 import "./App.css";
+import { PersistGate } from "redux-persist/integration/react";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,7 +13,7 @@ import {
 } from "react-router-dom";
 
 import { Provider } from "react-redux";
-import store from "./store";
+import { store, persistor } from "./store";
 import { loadUser } from "./actions/authActions";
 
 function App() {
@@ -22,24 +23,26 @@ function App() {
 
   return (
     <Provider store={store}>
-      <Router>
-        <div className="App">
-          <Navbar />
-          <div>
-            <Switch>
-              <Route path="/" exact>
-                <LandingPage />
-              </Route>
-              <Route path="/howtoplay">
-                <HowToPlay />
-              </Route>
-              <PrivateRoute path="/:id">
-                <GameView />
-              </PrivateRoute>
-            </Switch>
+      <PersistGate loading={<div>LOADING</div>} persistor={persistor}>
+        <Router>
+          <div className="App">
+            <Navbar />
+            <div>
+              <Switch>
+                <Route path="/" exact>
+                  <LandingPage />
+                </Route>
+                <Route path="/howtoplay">
+                  <HowToPlay />
+                </Route>
+                <PrivateRoute path="/:id">
+                  <GameView />
+                </PrivateRoute>
+              </Switch>
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </PersistGate>
     </Provider>
   );
 }
