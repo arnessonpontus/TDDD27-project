@@ -11,7 +11,6 @@ import {
   setRoomUsers,
   setRoom,
   setGameTime,
-  addGamePoints,
 } from "../../actions/gameActions";
 import PropTypes from "prop-types";
 
@@ -29,6 +28,7 @@ const GameInfo = (props) => {
 
   const { user } = props.auth;
 
+  const [gameMode, setGameMode] = useState("Free For All");
   useEffect(() => {
     props.getAllWords();
     props.socket.on("roomUsers", ({ room, users }) => {
@@ -110,6 +110,8 @@ const GameInfo = (props) => {
         </p>
         <h1 className="is-size-7">Current category: </h1>
         <p className="is-size-6">{category ? category : "Not assigned"}</p>
+        <h1 className="is-size-7">Game mode: </h1>
+        <p className="is-size-6">{gameMode}</p>
         {drawingWord ? (
           <Fragment>
             <h1 className="is-size-7">Draw the word: </h1>
@@ -144,7 +146,6 @@ GameInfo.propTypes = {
   setRoomUsers: PropTypes.func.isRequired,
   setRoom: PropTypes.func.isRequired,
   setGameTime: PropTypes.func.isRequired,
-  addGamePoints: PropTypes.func.isRequired,
   word: PropTypes.object.isRequired,
 };
 

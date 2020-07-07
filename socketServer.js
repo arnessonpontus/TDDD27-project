@@ -8,6 +8,10 @@ const {
   addCurrentWord,
   removeCurrentWord,
   getCurrentWord,
+  getRooms,
+  removeRoom,
+  addRoom,
+  doesContainRoom,
 } = require("./utils/game");
 
 function initSocket(server) {
@@ -21,6 +25,11 @@ function initSocket(server) {
 
     socket.on("joinRoom", ({ name, email, room }) => {
       const user = userJoin(socket.id, name, email, room);
+
+      console.log(getRooms());
+      if (!doesContainRoom(user.room)) {
+        addRoom(room);
+      }
 
       socket.join(user.room);
 
@@ -149,6 +158,10 @@ function initSocket(server) {
           room: user.room,
           users: getRoomUsers(user.room),
         });
+
+        if (getRoomUsers(user.room).length === 0) {
+          removeRoom(user.room);
+        }
       }
     });
   });

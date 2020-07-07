@@ -1,4 +1,6 @@
 currentWords = [];
+gameModes = [];
+rooms = [];
 
 // Set current word to guess
 function addCurrentWord(currWord, currentDrawer, room) {
@@ -22,4 +24,35 @@ function getCurrentWord(room) {
   return currentWords.find((currentWord) => currentWord.room === room);
 }
 
-module.exports = { addCurrentWord, removeCurrentWord, getCurrentWord };
+function addRoom(room) {
+  rooms.push(room);
+  return room;
+}
+
+function removeRoom(room) {
+  rooms.pop(room);
+  return room;
+}
+
+function getRooms() {
+  return rooms;
+}
+
+function doesContainRoom(room) {
+  const index = rooms.findIndex((savedRoom) => savedRoom === room);
+  if (index !== -1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+module.exports = {
+  addCurrentWord,
+  removeCurrentWord,
+  getCurrentWord,
+  addRoom,
+  removeRoom,
+  getRooms,
+  doesContainRoom,
+};

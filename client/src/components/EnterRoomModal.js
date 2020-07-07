@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 const EnterRoomModal = (props) => {
   const history = useHistory();
@@ -16,7 +17,28 @@ const EnterRoomModal = (props) => {
     e.preventDefault();
 
     if (user) {
-      history.push("/" + room.replace(/\s+/g, "-").toLowerCase());
+      axios
+        .get("/api/game/enterRoom/" + room)
+        .then((res) => {
+          if (
+            props.actionType === "joinRoom" &&
+            res.data === "ROOM_NOT_FOUND"
+          ) {
+            setMsg("No such room exist!");
+            return;
+          } else if (
+            props.actionType === "createRoom" &&
+            res.data === "ROOM_FOUND"
+          ) {
+            setMsg("Room already exist!");
+            return;
+          } else {
+            history.push("/" + room.replace(/\s+/g, "-").toLowerCase());
+          }
+        })
+        .catch((err) => {
+          console.log("Error, ", err);
+        });
     } else {
       setMsg(
         `You need to log in to ${
