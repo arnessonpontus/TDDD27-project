@@ -29,7 +29,7 @@ const GameView = (props) => {
     if (user) {
       socket.emit("joinRoom", {
         name: user.name,
-        email: user.email,
+        id: user.id,
         room: roomId,
       });
     }

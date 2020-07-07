@@ -23,13 +23,14 @@ function initSocket(server) {
     console.log("New socket connection");
     const now = new Date();
 
-    socket.on("joinRoom", ({ name, email, room }) => {
-      const user = userJoin(socket.id, name, email, room);
-
-      console.log(getRooms());
-      if (!doesContainRoom(user.room)) {
-        addRoom(room);
+    socket.on("joinRoom", ({ name, id, room }) => {
+      let leader = false;
+      if (!doesContainRoom(room)) {
+        addRoom(room, name, id);
+        leader = true;
       }
+
+      const user = userJoin(socket.id, name, id, room);
 
       socket.join(user.room);
 
@@ -98,8 +99,8 @@ function initSocket(server) {
     });
 
     // Listen for game start
-    socket.on("gameStart", ({ currentWord, name, email }) => {
-      const currentDrawer = { name, email };
+    socket.on("gameStart", ({ currentWord, name, id }) => {
+      const currentDrawer = { name, id };
       const user = getCurrentUser(socket.id);
       if (!user) return; // Log out bug?
 

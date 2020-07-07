@@ -43,10 +43,10 @@ const DrawingArea = (props) => {
 
       // Add points to drawer and gueser
       if (winner.user) {
-        if (winner.user.email === user.email) {
-          props.addGamePoints(winner.user.email, 20);
-        } else if (winner.drawingUser.email === user.email) {
-          props.addGamePoints(winner.drawingUser.email, 10);
+        if (winner.user.id === user.id) {
+          props.addGamePoints(winner.user.id, 20);
+        } else if (winner.drawingUser.id === user.id) {
+          props.addGamePoints(winner.drawingUser.id, 10);
         }
 
         setGameWinner(winner.user.name);
@@ -141,7 +141,7 @@ const DrawingArea = (props) => {
     props.socket.emit("gameStart", {
       currentWord: currentWord.name,
       name: user.name,
-      email: user.email,
+      id: user.id,
     });
     props.setGameStarted(true);
     setGameWinner("");

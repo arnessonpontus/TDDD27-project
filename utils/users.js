@@ -1,15 +1,15 @@
 const users = [];
 
 // Join user to room
-function userJoin(id, name, email, room) {
-  const user = { id, name, email, room };
+function userJoin(socketId, name, id, room) {
+  const user = { socketId, name, id, room };
 
   users.push(user);
   return user;
 }
 
 function userLeave(id) {
-  const index = users.findIndex((user) => user.id === id);
+  const index = users.findIndex((user) => user.socketId === id);
 
   if (index !== -1) {
     return users.splice(index, 1)[0];
@@ -18,7 +18,7 @@ function userLeave(id) {
 
 // Get current user
 function getCurrentUser(id) {
-  return users.find((user) => user.id === id);
+  return users.find((user) => user.socketId === id);
 }
 
 function getRoomUsers(room) {

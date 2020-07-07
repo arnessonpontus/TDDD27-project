@@ -77,8 +77,8 @@ export const setGameMode = (gameMode) => {
   };
 };
 
-export const addGamePoints = (email, points) => (dispatch) => {
-  const body = JSON.stringify({ email, points });
+export const addGamePoints = (id, points) => (dispatch) => {
+  const body = JSON.stringify({ id, points });
 
   const config = {
     headers: {
