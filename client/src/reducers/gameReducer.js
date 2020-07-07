@@ -5,6 +5,7 @@ import {
   SET_ROOM,
   SET_CURRENT_TIME,
   SET_GAME_TIME,
+  SET_GAME_MODE,
   SET_ROOM_USERS,
   SETTINGS_LOADING,
   SET_GAME_STARTED,
@@ -17,6 +18,7 @@ const initialState = {
   room: "",
   currentTime: 60, // TODO: Change to game init at gametime
   gameTime: 60,
+  gameMode: "Playground",
   roomUsers: [],
   loading: false,
   gameStarted: false,
@@ -52,6 +54,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         currentTime: action.payload,
+        loading: false,
+      };
+    case SET_GAME_MODE:
+      return {
+        ...state,
+        gameMode: action.payload,
         loading: false,
       };
     case SET_ROOM_USERS:

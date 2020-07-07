@@ -5,6 +5,7 @@ import {
   SET_CURRENT_DRAWER,
   SET_CURRENT_TIME,
   SET_GAME_TIME,
+  SET_GAME_MODE,
   SET_ROOM_USERS,
   SET_ROOM,
   SET_GAME_STARTED,
@@ -66,6 +67,13 @@ export const setGameTime = (time) => {
   return {
     type: SET_GAME_TIME,
     payload: time,
+  };
+};
+
+export const setGameMode = (gameMode) => {
+  return {
+    type: SET_GAME_MODE,
+    payload: gameMode,
   };
 };
 

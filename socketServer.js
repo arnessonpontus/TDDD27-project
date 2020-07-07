@@ -92,6 +92,11 @@ function initSocket(server) {
       io.to(user.room).emit("changeCategory", { category });
     });
 
+    socket.on("changeGameMode", ({ newGameMode }) => {
+      const user = getCurrentUser(socket.id);
+      io.to(user.room).emit("changeGameMode", { newGameMode });
+    });
+
     // Listen for game start
     socket.on("gameStart", ({ currentWord, name, email }) => {
       const currentDrawer = { name, email };

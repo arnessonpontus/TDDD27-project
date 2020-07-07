@@ -11,6 +11,7 @@ import {
   setRoomUsers,
   setRoom,
   setGameTime,
+  setGameMode,
 } from "../../actions/gameActions";
 import PropTypes from "prop-types";
 
@@ -24,11 +25,11 @@ const GameInfo = (props) => {
     roomUsers,
     room,
     gameTime,
+    gameMode,
   } = props.game;
 
   const { user } = props.auth;
 
-  const [gameMode, setGameMode] = useState("Free For All");
   useEffect(() => {
     props.getAllWords();
     props.socket.on("roomUsers", ({ room, users }) => {
@@ -46,6 +47,10 @@ const GameInfo = (props) => {
 
     props.socket.on("changeCategory", ({ category }) => {
       props.setCategory(category); // Forgot to put props. // This called funtion but did not dispatch to reducer
+    });
+
+    props.socket.on("changeGameMode", ({ newGameMode }) => {
+      props.setGameMode(newGameMode); // Forgot to put props. // This called funtion but did not dispatch to reducer
     });
 
     props.socket.on("secondChange", ({ countDownTime }) => {
@@ -76,6 +81,12 @@ const GameInfo = (props) => {
   const onChangeCategory = (e) => {
     props.socket.emit("changeCategory", {
       category: e.target.value,
+    });
+  };
+
+  const onChangeGameMode = (e) => {
+    props.socket.emit("changeGameMode", {
+      newGameMode: e.target.value,
     });
   };
 
@@ -122,13 +133,22 @@ const GameInfo = (props) => {
       <div className="container">
         <h1 className="is-size-7">Category: </h1>
         <div className="select is-small">
-          <select onChange={onChangeCategory}>
+          <select value={category} onChange={onChangeCategory}>
             <option value="All">All</option>
             <option value="Object">Object</option>
             <option value="Action">Action</option>
             <option value="Person">Person/character</option>
             <option value="Animal">Animal</option>
             <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div className="container">
+        <h1 className="is-size-7">Game mode: </h1>
+        <div className="select is-small">
+          <select value={gameMode} onChange={onChangeGameMode}>
+            <option value="Playground">Playground</option>
+            <option value="Free for all">Free for all</option>
           </select>
         </div>
       </div>
@@ -146,6 +166,7 @@ GameInfo.propTypes = {
   setRoomUsers: PropTypes.func.isRequired,
   setRoom: PropTypes.func.isRequired,
   setGameTime: PropTypes.func.isRequired,
+  setGameMode: PropTypes.func.isRequired,
   word: PropTypes.object.isRequired,
 };
 
@@ -165,4 +186,5 @@ export default connect(mapStateToProps, {
   setRoomUsers,
   setRoom,
   setGameTime,
+  setGameMode,
 })(GameInfo);

@@ -22,6 +22,7 @@ export const SET_DRAWING_WORD = "SET_DRAWING_WORD";
 export const SET_CURRENT_DRAWER = "SET_CURRENT_DRAWER";
 export const SET_CURRENT_TIME = "SET_CURRENT_TIME";
 export const SET_GAME_TIME = "SET_GAME_TIME";
+export const SET_GAME_MODE = "SET_GAME_MODE";
 export const SET_ROOM_USERS = "SET_ROOM_USERS";
 export const SET_ROOM = "SET_ROOM";
 export const SET_GAME_STARTED = "SET_GAME_STARTED";
