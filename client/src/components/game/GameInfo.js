@@ -12,6 +12,7 @@ import {
   setRoom,
   setGameTime,
   setGameMode,
+  setLeader,
 } from "../../actions/gameActions";
 import PropTypes from "prop-types";
 
@@ -26,15 +27,17 @@ const GameInfo = (props) => {
     room,
     gameTime,
     gameMode,
+    leader,
   } = props.game;
 
   const { user } = props.auth;
 
   useEffect(() => {
     props.getAllWords();
-    props.socket.on("roomUsers", ({ room, users }) => {
+    props.socket.on("roomUsers", ({ room, users, leader }) => {
       props.setRoom(room);
       props.setRoomUsers(users);
+      props.setLeader(leader);
     });
 
     props.socket.on("gameInfo", ({ currentDrawer }) => {
@@ -110,7 +113,12 @@ const GameInfo = (props) => {
 
         <p className="is-size-7">Current players:</p>
         {roomUsers.map((roomUser, i) => {
-          return <p key={i}>{roomUser.name}</p>;
+          return (
+            <p key={i}>
+              {roomUser.name}{" "}
+              {leader && leader.leaderId === roomUser.id ? "L" : null}
+            </p>
+          );
         })}
       </div>
       <p>Game info</p>
@@ -167,6 +175,7 @@ GameInfo.propTypes = {
   setRoom: PropTypes.func.isRequired,
   setGameTime: PropTypes.func.isRequired,
   setGameMode: PropTypes.func.isRequired,
+  setLeader: PropTypes.func.isRequired,
   word: PropTypes.object.isRequired,
 };
 
@@ -187,4 +196,5 @@ export default connect(mapStateToProps, {
   setRoom,
   setGameTime,
   setGameMode,
+  setLeader,
 })(GameInfo);

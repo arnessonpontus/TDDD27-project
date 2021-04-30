@@ -21,7 +21,14 @@ const DrawingArea = (props) => {
   const [gameWinner, setGameWinner] = useState("");
   const [prevWord, setPrevWord] = useState("");
 
-  const { category, gameStarted, drawingWord, currentDrawer } = props.game;
+  const {
+    category,
+    gameStarted,
+    drawingWord,
+    currentDrawer,
+    leader,
+    gameMode,
+  } = props.game;
   const { user } = props.auth;
   // Init reference
   const canvasRef = React.useRef(null);
@@ -291,6 +298,9 @@ const DrawingArea = (props) => {
           Draw: {drawingWord}
         </span>
         <button
+          disabled={
+            user && leader && user._id !== leader.leaderId ? true : false
+          }
           style={{
             position: "absolute",
             display: gameStarted ? "none" : "",
@@ -300,7 +310,7 @@ const DrawingArea = (props) => {
           onClick={onGameStart}
         >
           {" "}
-          Start game
+          {gameMode === "Free for all" ? "Start Free for all" : "Start game"}
         </button>
         <canvas
           style={{

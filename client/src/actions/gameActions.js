@@ -10,6 +10,7 @@ import {
   SET_ROOM,
   SET_GAME_STARTED,
   ADD_POINTS,
+  SET_LEADER,
 } from "./types";
 
 import axios from "axios";
@@ -74,6 +75,13 @@ export const setGameMode = (gameMode) => {
   return {
     type: SET_GAME_MODE,
     payload: gameMode,
+  };
+};
+
+export const setLeader = (leader) => {
+  return {
+    type: SET_LEADER,
+    payload: leader,
   };
 };
 

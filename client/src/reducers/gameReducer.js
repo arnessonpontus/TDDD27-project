@@ -9,6 +9,7 @@ import {
   SET_ROOM_USERS,
   SETTINGS_LOADING,
   SET_GAME_STARTED,
+  SET_LEADER,
 } from "../actions/types";
 
 const initialState = {
@@ -22,6 +23,7 @@ const initialState = {
   roomUsers: [],
   loading: false,
   gameStarted: false,
+  leader: "",
 };
 
 export default function (state = initialState, action) {
@@ -60,6 +62,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         gameMode: action.payload,
+        loading: false,
+      };
+    case SET_LEADER:
+      return {
+        ...state,
+        leader: action.payload,
         loading: false,
       };
     case SET_ROOM_USERS:

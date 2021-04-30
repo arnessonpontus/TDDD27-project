@@ -25,6 +25,7 @@ export const SET_GAME_TIME = "SET_GAME_TIME";
 export const SET_GAME_MODE = "SET_GAME_MODE";
 export const SET_ROOM_USERS = "SET_ROOM_USERS";
 export const SET_ROOM = "SET_ROOM";
+export const SET_LEADER = "SET_LEADER";
 export const SET_GAME_STARTED = "SET_GAME_STARTED";
 
 export const ADD_POINTS = "ADD_POINTS";

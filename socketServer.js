@@ -12,6 +12,8 @@ const {
   removeRoom,
   addRoom,
   doesContainRoom,
+  getRoomLeader,
+  setRoomLeader,
 } = require("./utils/game");
 
 function initSocket(server) {
@@ -24,10 +26,8 @@ function initSocket(server) {
     const now = new Date();
 
     socket.on("joinRoom", ({ name, id, room }) => {
-      let leader = false;
       if (!doesContainRoom(room)) {
         addRoom(room, name, id);
-        leader = true;
       }
 
       const user = userJoin(socket.id, name, id, room);
@@ -51,6 +51,7 @@ function initSocket(server) {
       io.to(user.room).emit("roomUsers", {
         room: user.room,
         users: getRoomUsers(user.room),
+        leader: getRoomLeader(user.room),
       });
     });
 
@@ -160,9 +161,22 @@ function initSocket(server) {
             now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds(),
         });
 
+        let leader = getRoomLeader(user.room);
+        if (user.id === leader.leaderId) {
+          const newLeader = getRoomUsers(user.room)[0];
+          if (newLeader) {
+            leader = { name: newLeader.name, leaderId: newLeader.id };
+          } else {
+            leader = { name: "", leaderId: "" };
+          }
+
+          setRoomLeader(user.room, leader);
+        }
+
         io.to(user.room).emit("roomUsers", {
           room: user.room,
           users: getRoomUsers(user.room),
+          leader: leader,
         });
 
         if (getRoomUsers(user.room).length === 0) {
